@@ -8,6 +8,7 @@ public class PlayerController : Controller {
     public KeyCode MoveBackward;
     public KeyCode TurnLeft;
     public KeyCode TurnRight;
+    public KeyCode Primary;
 
     // Start is called before the first frame update
     void Start()
@@ -23,21 +24,26 @@ public class PlayerController : Controller {
 
     public override void ProcessInputs()
     {
-        if (Input.GetKeyDown(MoveForward)) {
+        //============| MOVEMENT |============
+        if (Input.GetKey(MoveForward)) {
             pawn.MoveForward();
         }
-        if (Input.GetKeyDown(MoveBackward))
+        if (Input.GetKey(MoveBackward))
         {
             pawn.MoveBackwards();
         }
-        if (Input.GetKeyDown(TurnLeft))
+        if (Input.GetKey(TurnLeft))
         {
             pawn.TurnCounterClockwise();
         }
-        if (Input.GetKeyDown(TurnRight))
+        if (Input.GetKey(TurnRight))
         {
             pawn.TurnClockwise();
         }
 
+        //============| ACTIONS |============
+        if (Input.GetKeyDown(Primary)) {
+            //tank Shooting goes here
+        }
     }
 }

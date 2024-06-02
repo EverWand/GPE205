@@ -1,39 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tank_Pawn : Pawn
 {
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        
+        base.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public override void MoveForward() //Move the tank Forwards using rigid body
     {
-        Debug.Log("Moving Foward");
+        if (mover!=null) { 
+        mover.Move(transform.forward, movementSpeed);
+            }
+        else{
+            Debug.LogWarning("No Movement Component Attatched to Pawn.");
+        }
     }
     public override void MoveBackwards() // move the tank back using rigid body
     {
-
-        Debug.Log("Moving Backwards");
+        if (mover != null)
+        {
+            mover.Move(-transform.forward, movementSpeed);
+        }
+        else { 
+            Debug.LogWarning("No Movement Component Attatched to Pawn.");
+        }
     }
 
     public override void TurnClockwise() // turn the tank Right
     {
-
-        Debug.Log("Turning Clockwise");
+        if (mover!=null){
+        mover.Rotate(turnSpeed);
+            }
+        else{
+            Debug.LogWarning("No Movement Component Attatched to Pawn.");
+        }
     }
     public override void TurnCounterClockwise() //Turn the tank Left
     {
-
-        Debug.Log("Turning Counter Clockwise");
+        if (mover!=null){
+        mover.Rotate(-turnSpeed);
+            }
+        else{
+            Debug.LogWarning("No Movement Component Attatched to Pawn.");
+        }
     }
 }

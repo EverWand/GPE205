@@ -5,14 +5,14 @@ using UnityEngine;
 public abstract class Pawn : MonoBehaviour
 {
     public float movementSpeed;
-
     public float turnSpeed;
 
+    public Mover mover;
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
-        
+      mover = GetComponent<Mover>();
     }
 
     // Update is called once per frame
