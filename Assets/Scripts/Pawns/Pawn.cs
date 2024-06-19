@@ -20,8 +20,6 @@ public abstract class Pawn : MonoBehaviour
     {
         
     }
-
-
     public abstract void MoveForward();
     public abstract void MoveBackwards();
     public abstract void TurnClockwise();
