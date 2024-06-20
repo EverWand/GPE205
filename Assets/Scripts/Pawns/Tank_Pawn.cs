@@ -3,12 +3,14 @@ using UnityEngine;
 public class Tank_Pawn : Pawn
 {
     Shooter shooter;
+    private NoiseMaker noiseMaker;
 
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
-        shooter = GetComponent<Shooter>();
+        shooter = gameObject.GetComponent<Shooter>();
+        noiseMaker = gameObject.GetComponent<NoiseMaker>();
     }
 
     // Update is called once per frame
@@ -21,11 +23,12 @@ public class Tank_Pawn : Pawn
     public override void MoveForward() //Move the tank Forwards using rigid body
     {
         if (mover!=null) { 
-        mover.Move(transform.forward, movementSpeed);
-            }
+            mover.Move(transform.forward, movementSpeed);
+        }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
+
     }
     public override void MoveBackwards() // move the tank back using rigid body
     {
