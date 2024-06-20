@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class Tank_Pawn : Pawn
 {
+    Shooter shooter;
+
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
+        shooter = GetComponent<Shooter>();
     }
 
     // Update is called once per frame
@@ -13,7 +16,8 @@ public class Tank_Pawn : Pawn
     {
 
     }
-
+    
+    //===| PAWN KINEMATICS |===
     public override void MoveForward() //Move the tank Forwards using rigid body
     {
         if (mover!=null) { 
@@ -52,11 +56,18 @@ public class Tank_Pawn : Pawn
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
     }
-
     public override void RotateTowards(Vector3 targetPos) { 
         Vector3 vectorToTarget = targetPos - transform.position;
         Quaternion targetRot = Quaternion.LookRotation(vectorToTarget, Vector3.up);
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
     }
+
+    //===| PAWN ACTIONS |===
+    public override void Primary() 
+    {
+        shooter.Shoot();
+    }
+
 }
+

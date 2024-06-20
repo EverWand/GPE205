@@ -192,7 +192,19 @@ MonoBehaviour:
       m_Calls: []
   OnDamaged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5636886781287820760}
+        m_TargetAssemblyTypeName: HealthSystem, Assembly-CSharp
+        m_MethodName: CheckForDeath
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnUpdateHealth:
     m_PersistentCalls:
       m_Calls: []
@@ -208,7 +220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e96fe7d7636f4846b41a11184e8fd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShootKey: 323
   damage: 10
   fireForce: 50
   fireRate: 1

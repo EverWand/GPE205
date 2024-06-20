@@ -33,6 +33,8 @@ public class AIController : Controller
             //In Guard State
             case AIState.Guard:
                 DoGuardState();
+                if (!target) { return; } // Do not proceed if there's no target
+
                 if (IsDistanceLessThan(target, chaseDistance))
                 {
                     ChangeState(AIState.Chase);
@@ -40,9 +42,12 @@ public class AIController : Controller
                 break;
             //In Chase State
             case AIState.Chase:
+                DoChase(); //Chase the Target
+
+                //Is the Target too far away?
                 if (!IsDistanceLessThan(target, chaseDistance))
                 {
-                    ChangeState(AIState.Guard);
+                    ChangeState(AIState.Guard); //go back to guard state
                 }
                 break;
             //In Flee State
@@ -83,10 +88,10 @@ public class AIController : Controller
     public void DoChase() 
     {
         //Find the Target
-        Seek(target.transform.position);
+        Seek(target);
     }
 
-    public void Seek(GameObject target) //Seek Game Object
+    public void Seek(GameObject target) //Seek GameObject
     {
         //Look at the Game Objects Position
         Seek(target.transform.position);
@@ -95,7 +100,7 @@ public class AIController : Controller
     {
         //Look at the position
         pawn.RotateTowards(targetPosition);
-
+        pawn.MoveForward();
     }
     //Returns wether the given target is within a certain distance
     public bool IsDistanceLessThan(GameObject target, float distance)

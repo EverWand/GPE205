@@ -12,7 +12,7 @@ public abstract class Pawn : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
-      mover = GetComponent<Mover>();
+      mover = GetComponent<Mover>();        //Set mover reference by attatched component
     }
 
     // Update is called once per frame
@@ -20,10 +20,15 @@ public abstract class Pawn : MonoBehaviour
     {
         
     }
+
+    //===| PAWN KINEMATICS |===
     public abstract void MoveForward();
     public abstract void MoveBackwards();
     public abstract void TurnClockwise();
     public abstract void TurnCounterClockwise();
-
     public abstract void RotateTowards(Vector3 targetPos);
+
+    //===| PAWN ACTIONS|===
+    public abstract void Primary();
+
 }

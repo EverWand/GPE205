@@ -49,4 +49,4 @@ MonoBehaviour:
   MoveBackward: 115
   TurnLeft: 97
   TurnRight: 100
-  Primary: 0
+  Primary: 32

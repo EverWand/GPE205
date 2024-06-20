@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : Controller {
+public class PlayerController : Controller
+{
 
     public KeyCode MoveForward;
     public KeyCode MoveBackward;
@@ -13,7 +12,7 @@ public class PlayerController : Controller {
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -25,7 +24,8 @@ public class PlayerController : Controller {
     public override void ProcessInputs()
     {
         //============| MOVEMENT |============
-        if (Input.GetKey(MoveForward)) {
+        if (Input.GetKey(MoveForward))
+        {
             pawn.MoveForward();
         }
         if (Input.GetKey(MoveBackward))
@@ -42,9 +42,11 @@ public class PlayerController : Controller {
         }
 
         //============| ACTIONS |============
-        if (Input.GetKeyDown(Primary)) {
+            // - PRIMARY ABILITY
+        if (Input.GetKeyDown(Primary))
+        {
             //tank Shooting goes here
-
+            pawn.Primary();
         }
     }
 }

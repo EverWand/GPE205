@@ -2,7 +2,6 @@ using UnityEngine;
 
 public abstract class Shooter : MonoBehaviour
 {
-    public KeyCode ShootKey; //The Key used to shoot Projectiles
 
     //Variables
     public float damage = 10f;          //Sets the Shooters Damage
