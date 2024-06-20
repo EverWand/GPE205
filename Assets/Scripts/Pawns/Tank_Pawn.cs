@@ -52,4 +52,11 @@ public class Tank_Pawn : Pawn
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
     }
+
+    public override void RotateTowards(Vector3 targetPos) { 
+        Vector3 vectorToTarget = targetPos - transform.position;
+        Quaternion targetRot = Quaternion.LookRotation(vectorToTarget, Vector3.up);
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+    }
 }

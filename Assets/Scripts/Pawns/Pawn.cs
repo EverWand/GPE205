@@ -24,4 +24,6 @@ public abstract class Pawn : MonoBehaviour
     public abstract void MoveBackwards();
     public abstract void TurnClockwise();
     public abstract void TurnCounterClockwise();
+
+    public abstract void RotateTowards(Vector3 targetPos);
 }
