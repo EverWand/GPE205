@@ -14,8 +14,9 @@ public class AIController : Controller
     public float fieldOfView;           //The max angle that the AI can see
     public float ViewDistance;          //The distance of which the AI can see
 
-    public float timeLastSwitched;  //tracks the time it takes to transition into another state
-    public GameObject target; //target the AI is attempting to sense
+    public float timeLastSwitched;      //tracks the time it takes to transition into another state
+    public GameObject target;           //target the AI is attempting to sense
+
 
 
     // Start is called before the first frame update

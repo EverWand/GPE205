@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    
     //Player References
     public GameObject playerControllerPrefab;
     public GameObject playerPrefab;
@@ -28,7 +29,6 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         SpawnPlayer(); //Spawn the Player into the Scene
-
         try //catch any errors when setting default target to all AI's
         {
             SetDefaultAITarget(playerCharacter); //set default AI Target to all AIs
