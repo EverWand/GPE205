@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 863183083294523057, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}
       propertyPath: m_Name
-      value: PlayerSpawn
+      value: ProjectileSpawn
       objectReference: {fileID: 0}
     - target: {fileID: 863183083294523057, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}
@@ -354,17 +354,17 @@ PrefabInstance:
     - target: {fileID: 8468318661327657620, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.01
+      value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 8468318661327657620, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.616
+      value: 0.461
       objectReference: {fileID: 0}
     - target: {fileID: 8468318661327657620, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.252
+      value: 1.129
       objectReference: {fileID: 0}
     - target: {fileID: 8468318661327657620, guid: dbe3900edbea510458888120ad88c76d,
         type: 3}

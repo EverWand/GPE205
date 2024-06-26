@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : Controller
@@ -12,11 +13,16 @@ public class AIController : Controller
     public float hearingDistance;       //Distance the AI can Hear
     //---Seeing
     public float fieldOfView;           //The max angle that the AI can see
-    public float ViewDistance;          //The distance of which the AI can see
+    public float viewDistance;          //The distance of which the AI can see
+
+    //---ACTION VARIABLES---
+    //---Attackig
+    public float attackRange;           //Range of when the AI can use their attack
 
     public float timeLastSwitched;      //tracks the time it takes to transition into another state
     public GameObject target;           //target the AI is attempting to sense
 
+    public List<Transform> postList;    //List of the AI's gaurd Posts
 
 
     // Start is called before the first frame update
@@ -33,26 +39,46 @@ public class AIController : Controller
 
     public override void ProcessInputs()
     {
+        //Is there a target to interact with?
+        if (!target)
+        {
+            return;
+        }
+        
+        //React to Target
         switch (currState)
         {
             //In Guard State
             case AIState.Guard:
-                DoGuardState();
-                if (!target) { return; } // Do not proceed if there's no target
+                DoGuardState(); //Gaurd current Post
 
-                if (CanHear(target))//Can the AI hear the player?
+                //Can the AI hear the player?
+                if (CanHear(target))
                 {
-                    ChangeState(AIState.Chase); //Switch to Chase State
+                    ChangeState(AIState.Scan); //Switch to Chase State
+                }
+                //Can directly See the target
+                if (CanSee(target))
+                {
+                    ChangeState(AIState.Chase); //chase the target
                 }
                 break;
             //In Chase State
             case AIState.Chase:
                 DoChase(); //Chase the Target
-                if(target == null) { return; }
+                if (target == null) 
+                { 
+                    ChangeState(AIState.Guard); 
+                }
                 //Is the Target too far away?
                 if (!IsDistanceLessThan(target, chaseDistance))
                 {
                     ChangeState(AIState.Guard); //go back to guard state
+                }
+                //is the target lined up and within attacking range?
+                if (CanSee(target) && IsDistanceLessThan(target, attackRange))
+                {
+                    ChangeState(AIState.Attack); //Attack the target
                 }
                 break;
             //In Flee State
@@ -63,9 +89,23 @@ public class AIController : Controller
                 break;
             //In Attack State
             case AIState.Attack:
+                DoAttackState(); //Attack the target
+                
+                //lost sight of the Target
+                if (!CanSee(target)) 
+                {
+                    ChangeState(AIState.Scan); //Scan for Target
+                }
                 break;
             //In Scan State
             case AIState.Scan:
+                DoScan(); //Scan the Environment
+                //Target is spotted?
+                if (CanSee(target))
+                {
+                    //Chase the Target
+                    ChangeState(AIState.Chase);
+                }
                 break;
             //In Back to Post State
             case AIState.BackToPost:
@@ -76,6 +116,8 @@ public class AIController : Controller
         }
     }
 
+
+    //---STATE FUNCTIONS---
     //Used to Change to a different State
     public virtual void ChangeState(AIState newState)
     {
@@ -93,10 +135,24 @@ public class AIController : Controller
     public void DoChase()
     {
         //Find the Target
-        if (target == null) { return;}
+        if (target == null) { return; }
         Seek(target);
     }
 
+    public void DoAttackState()
+    {
+        Seek(target);
+        pawn.Primary();
+    }
+    //Scans the Environment by turning clockwise
+    public void DoScan()
+    {
+        pawn.TurnClockwise();
+    }
+
+
+    //---ACTION FUNCTIONS---
+    //---Seeking out target
     public void Seek(GameObject target) //Seek GameObject
     {
         //Look at the Game Objects Position
@@ -108,6 +164,8 @@ public class AIController : Controller
         pawn.RotateTowards(targetPosition);
         pawn.MoveForward();
     }
+
+    //---CONDITION FUNCTIONS---
     //Returns wether the given target is within a certain distance
     public bool IsDistanceLessThan(GameObject target, float distance)
     {
@@ -123,7 +181,8 @@ public class AIController : Controller
             return false;
         }
     }
-
+    
+    //---Check Senses
     //Return wether the AI can Hear the target
     public bool CanHear(GameObject target)
     {
@@ -132,9 +191,9 @@ public class AIController : Controller
 
         //===| HEARING PREREQUISITES |===
         //Make sure the target makes noise
-        if (noiseMaker == null) { return true; }
+        if (noiseMaker == null) { return false; }
         //Make sure the target's noise has a volume
-        if (noiseMaker.volumeDistance <= 0) { return true; }
+        if (noiseMaker.volumeDistance <= 0) { return false;}
 
         //===| HEARING TEST |===
         //Farthest distance the AI would be able to hear the targetted noise
@@ -148,16 +207,27 @@ public class AIController : Controller
 
         return false;
     }
-
     //Return wether the AI can see the Target
     public bool CanSee(GameObject target)
     {
         //Get vector pointing to the target
         Vector3 agentToTargetVector = target.transform.position - pawn.transform.position;
         //Get the angle to the targeted vector from where the AI is looking forward
-        float angleToVector = Vector3.Angle(agentToTargetVector, target.transform.forward);
+        float angleToTarget = Vector3.Angle(agentToTargetVector, pawn.transform.forward);
 
-        if (angleToVector < fieldOfView && IsDistanceLessThan(target, ViewDistance)) { return true; }   // 
-        else { return false; }
+        if (angleToTarget < fieldOfView)
+        {
+            RaycastHit hit; //create a raycast
+            //does the ray cast hit an Object?
+            if (Physics.Raycast(pawn.transform.position, agentToTargetVector, out hit, viewDistance))
+            {
+                GameObject seenGameObject = hit.transform.gameObject; //get the seen game object
+
+                //is the object seen the Target?
+                if (seenGameObject == target) { return true; }
+            }
+            return false;
+        }
+        return false;
     }
 }
