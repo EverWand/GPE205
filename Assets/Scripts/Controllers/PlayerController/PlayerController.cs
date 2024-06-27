@@ -12,6 +12,14 @@ public class PlayerController : Controller
 
     private NoiseMaker noiseMaker; //Makes for AI to sense Noises
     public float noiseDistance = 10;
+    //Structure of Volumes used for different noises the player makes
+    public struct noiseVolumeStruct
+    {
+        public float movementVolume;
+        public float turnVolume;
+        public float primaryFireVolume;
+    } 
+    public noiseVolumeStruct noiseVolumes;
 
     // Start is called before the first frame update
     void Start()
@@ -74,6 +82,11 @@ public class PlayerController : Controller
         {
             //tank Shooting goes here
             pawn.Primary();
+            MakeNoise(noiseVolumes.movementVolume);
         }
+    }
+
+    private void MakeNoise(float noiseVolume) { 
+        noiseDistance = noiseVolume;
     }
 }

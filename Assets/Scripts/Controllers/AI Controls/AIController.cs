@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class AIController : Controller
 {
+    public static List<AIController> AllAIControllers;
     //Behavioral States
     public enum AIState { Guard, Chase, Flee, Patrol, Attack, Scan, BackToPost }
     public AIState currState; // Tracks what state the AI is in
@@ -29,12 +30,18 @@ public class AIController : Controller
     void Start()
     {
         ChangeState(AIState.Guard);
+        GameManager.instance.AIControllerList.Add(this);
     }
 
     // Update is called once per frame
     void Update()
     {
         ProcessInputs();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance.AIControllerList.Remove(this);
     }
 
     public override void ProcessInputs()

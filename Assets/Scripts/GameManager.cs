@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     private GameObject playerCharacter;
 
     //AIControllers
-    private List<AIController> AIControllerList;
+    public List<AIController> AIControllerList = new List<AIController>();
 
     public void Awake()
     {
