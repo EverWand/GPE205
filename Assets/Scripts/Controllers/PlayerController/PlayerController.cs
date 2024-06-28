@@ -21,9 +21,17 @@ public class PlayerController : Controller
     } 
     public noiseVolumeStruct noiseVolumes;
 
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        //add player to the Game Managanger
+        GameManager.instance.PlayersList.Add(this);
+
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
     }
@@ -34,6 +42,11 @@ public class PlayerController : Controller
         ProcessInputs();
     }
 
+    private void OnDestroy()
+    {
+        //add player to the Game Managanger
+        GameManager.instance.PlayersList.Remove(this);
+    }
     public override void ProcessInputs()
     {
         //============| MOVEMENT |============

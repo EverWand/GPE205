@@ -23,7 +23,7 @@ public class AIController : Controller
     public float timeLastSwitched;      //tracks the time it takes to transition into another state
     public GameObject target;           //target the AI is attempting to sense
 
-    public List<Transform> postList;    //List of the AI's gaurd Posts
+    public List<Transform> wayPoints;    //List of the AI's gaurd Posts
 
 
     // Start is called before the first frame update
@@ -31,12 +31,6 @@ public class AIController : Controller
     {
         ChangeState(AIState.Guard);
         GameManager.instance.AIControllerList.Add(this);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        ProcessInputs();
     }
 
     private void OnDestroy()
@@ -47,7 +41,7 @@ public class AIController : Controller
     public override void ProcessInputs()
     {
         //Is there a target to interact with?
-        if (!target)
+        if (!target  || !pawn)
         {
             return;
         }
@@ -122,7 +116,6 @@ public class AIController : Controller
                 break;
         }
     }
-
 
     //---STATE FUNCTIONS---
     //Used to Change to a different State

@@ -71,6 +71,5 @@ public class Tank_Pawn : Pawn
     {
         shooter.Shoot();
     }
-
 }
 

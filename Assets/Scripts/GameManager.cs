@@ -11,12 +11,17 @@ public class GameManager : MonoBehaviour
     public Transform playertransform;
     private GameObject playerCharacter;
 
-    //AIControllers
+    //====| GameObject Lists |====
+    //---Players
+    public List<PlayerController> PlayersList = new List<PlayerController>();
+    //---AI Controllers
     public List<AIController> AIControllerList = new List<AIController>();
+    //---WayPoints
+    public Transform[] wayPoints;
 
     public void Awake()
     {
-        if (instance == null)
+        if (!instance)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -55,7 +60,7 @@ public class GameManager : MonoBehaviour
         foreach (AIController AI in AIControllerList)
         {
             //and if that AIController doesn't have a target Set...
-            if (AI.target == null)
+            if (!AI.target)
             {
                 //Set it to the specific target
                 AI.target = target;
