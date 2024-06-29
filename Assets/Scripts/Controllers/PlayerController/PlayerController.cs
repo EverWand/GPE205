@@ -82,11 +82,11 @@ public class PlayerController : Controller
         }
         if (Input.GetKey(TurnLeft))
         {
-            pawn.TurnCounterClockwise();
+            pawn.TurnCounterClockwise(pawn.turnSpeed);
         }
         if (Input.GetKey(TurnRight))
         {
-            pawn.TurnClockwise();
+            pawn.TurnClockwise(pawn.turnSpeed);
         }
 
         //============| ACTIONS |============

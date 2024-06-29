@@ -41,19 +41,19 @@ public class Tank_Pawn : Pawn
         }
     }
 
-    public override void TurnClockwise() // turn the tank Right
+    public override void TurnClockwise(float Speed) // turn the tank Right
     {
         if (mover!=null){
-        mover.Rotate(turnSpeed);
+        mover.Rotate(Speed);
             }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
     }
-    public override void TurnCounterClockwise() //Turn the tank Left
+    public override void TurnCounterClockwise(float Speed) //Turn the tank Left
     {
         if (mover!=null){
-        mover.Rotate(-turnSpeed);
+        mover.Rotate(-Speed);
             }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");

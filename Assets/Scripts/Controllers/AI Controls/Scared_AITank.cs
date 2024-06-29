@@ -5,6 +5,7 @@ using UnityEngine;
 public class Scared_AITank : AIController
 {
     public Transform[] waypoints;
+
     public override void ProcessInputs()
     { 
         switch (currState) 

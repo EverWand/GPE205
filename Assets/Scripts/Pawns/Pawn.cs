@@ -24,8 +24,8 @@ public abstract class Pawn : MonoBehaviour
     //===| PAWN KINEMATICS |===
     public abstract void MoveForward();
     public abstract void MoveBackwards();
-    public abstract void TurnClockwise();
-    public abstract void TurnCounterClockwise();
+    public abstract void TurnClockwise(float Speed);
+    public abstract void TurnCounterClockwise(float Speed);
     public abstract void RotateTowards(Vector3 targetPos);
 
     //===| PAWN ACTIONS|===
