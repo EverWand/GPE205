@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Pawn : MonoBehaviour
 {
     public float movementSpeed;
+    private float movementSpeed_Attack;
     public float turnSpeed;
 
     public Mover mover;
@@ -12,20 +13,15 @@ public abstract class Pawn : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
-      mover = GetComponent<Mover>();        //Set mover reference by attatched component
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        movementSpeed_Attack = movementSpeed / 2;
+        mover = GetComponent<Mover>();        //Set mover reference by attatched component
     }
 
     //===| PAWN KINEMATICS |===
-    public abstract void MoveForward();
-    public abstract void MoveBackwards();
-    public abstract void TurnClockwise(float Speed);
-    public abstract void TurnCounterClockwise(float Speed);
+    public abstract void MoveForward(float speed);
+    public abstract void MoveBackwards(float speed);
+    public abstract void TurnClockwise(float turnSpeed);
+    public abstract void TurnCounterClockwise(float turnSpeed);
     public abstract void RotateTowards(Vector3 targetPos);
 
     //===| PAWN ACTIONS|===

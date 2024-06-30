@@ -50,3 +50,4 @@ MonoBehaviour:
   TurnLeft: 97
   TurnRight: 100
   Primary: 32
+  noiseMaker: {fileID: 0}

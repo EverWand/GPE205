@@ -6,7 +6,7 @@ public abstract class Controller : MonoBehaviour
 
     private void Awake()
     {
-        if (!pawn)
+        if (!pawn )
         {
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
         }

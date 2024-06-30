@@ -47,16 +47,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn: {fileID: 9223030048652491540}
   currState: 0
-  chaseDistance: 10
-  hearingDistance: 0
-  fieldOfView: 0
-  viewDistance: 0
-  attackRange: 0
+  chaseDistance: 50
+  hearingDistance: 20
+  fieldOfView: 20
+  viewDistance: 40
+  ScanSpan: 3
+  AttentionSpan: 5
+  PostSpan: 1
+  attackRange: 10
   minSteerDistance: 0
-  maxSteerDistance: 20
-  timeLastSwitched: 0
+  maxSteerDistance: 5
   target: {fileID: 0}
   wayPoints: []
+  currWaypointID: 0
+  wayPointPrefab: {fileID: 1785804161569491535, guid: c57171191d1c9754287f594fc3b19c87,
+    type: 3}
+  currWayPoint: {fileID: 0}
+  currWayPointScript: {fileID: 0}
 --- !u!1001 &6412454527960630070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65,6 +72,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4687852938474560046}
     m_Modifications:
+    - target: {fileID: 5636886781287820760, guid: 2f8982d7fc8789b49971659c7f72409e,
+        type: 3}
+      propertyPath: maxHealth
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5955385537943791193, guid: 2f8982d7fc8789b49971659c7f72409e,
         type: 3}
       propertyPath: m_Name

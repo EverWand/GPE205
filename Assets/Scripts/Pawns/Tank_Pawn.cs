@@ -12,48 +12,42 @@ public class Tank_Pawn : Pawn
         shooter = gameObject.GetComponent<Shooter>();
         noiseMaker = gameObject.GetComponent<NoiseMaker>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     
     //===| PAWN KINEMATICS |===
-    public override void MoveForward() //Move the tank Forwards using rigid body
+    public override void MoveForward(float speed) //Move the tank Forwards using rigid body
     {
         if (mover!=null) { 
-            mover.Move(transform.forward, movementSpeed);
+            mover.Move(transform.forward,speed);
         }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
 
     }
-    public override void MoveBackwards() // move the tank back using rigid body
+    public override void MoveBackwards(float speed) // move the tank back using rigid body
     {
         if (mover != null)
         {
-            mover.Move(-transform.forward, movementSpeed);
+            mover.Move(-transform.forward, speed);
         }
         else { 
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
     }
 
-    public override void TurnClockwise(float Speed) // turn the tank Right
+    public override void TurnClockwise(float turnSpeed) // turn the tank Right
     {
         if (mover!=null){
-        mover.Rotate(Speed);
+        mover.Rotate(turnSpeed);
             }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");
         }
     }
-    public override void TurnCounterClockwise(float Speed) //Turn the tank Left
+    public override void TurnCounterClockwise(float turnSpeed) //Turn the tank Left
     {
         if (mover!=null){
-        mover.Rotate(-Speed);
+        mover.Rotate(-turnSpeed);
             }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");

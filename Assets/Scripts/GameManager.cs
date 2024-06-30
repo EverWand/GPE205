@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     //---AI Controllers
     public List<AIController> AIControllerList = new List<AIController>();
     //---WayPoints
-    public List<Transform> wayPoints;
+    public List<WaypointScript> wayPoints;
 
     public void Awake()
     {
@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
         //Player set-up References
         GameObject Controller = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; //Make a Player controller into the scene
         playerCharacter = Instantiate(playerPrefab, playertransform) as GameObject; //Make a Player Pawn into the scene
-        playerCharacter.AddComponent<NoiseMaker>();
 
         Controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attatch the spawned player pawn to the spawned controller
     }

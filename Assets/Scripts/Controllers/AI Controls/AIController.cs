@@ -1,7 +1,5 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AIController : Controller
@@ -34,30 +32,47 @@ public class AIController : Controller
     private float timeLastSwitched;    //Tracks the time it takes to transition into another state
     public GameObject target;          //Target the AI is attempting to sense
 
-    public List<Transform> wayPoints; //List of the AI's gaurd Posts
-    public int currWaypointID = 0; //
-    private int directionSwitch = 1; // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
+    public List<WaypointScript> wayPoints; //List of the AI's gaurd Posts
 
+
+    public int currWaypointID = 0;              //current WaypointID
+    public GameObject wayPointPrefab;           //the prefab of a waypoint
+    public GameObject currWayPoint;             //the gameobject of the current waypoint
+    public WaypointScript currWayPointScript;   //the script of the current waypoint
+
+    private int directionSwitch = 1;            // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
 
     // Start is called before the first frame update
     void Start()
     {
-        //Does the AI have any waypoints?
-        if (wayPoints.Count != 0)
+        if (wayPoints == null)
         {
-            ChangeState(AIState.Guard);   //default to the Gaurd State
-            wayPoints.Add(this.gameObject.transform); //append this AI's current Position as it's one Waypoints
-            GameManager.instance.wayPoints.Add(this.gameObject.transform); ////append this AI's current transform to the Waypoints in the GameManager
+            wayPoints = new List<WaypointScript>();
         }
-        //There are waypoints
+
+        // Does the AI have any waypoints?
+        if (wayPoints.Count <= 0)
+        {
+
+            ChangeState(AIState.Guard);   // Default to the Guard State
+
+            // Spawn a Waypoint at the current position of the AI
+            currWayPoint = Instantiate(wayPointPrefab, pawn.transform.position, Quaternion.identity);
+
+            // Add the waypoint to the needed lists
+            GameManager.instance.wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());
+            wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());
+
+            UpdatePost(currWaypointID);
+        }
+        // There are waypoints
         else
         {
-            ChangeState(AIState.Patrol); //default to Patrol State
+            UpdatePost(currWaypointID);
+            ChangeState(AIState.Patrol); // Default to Patrol State
         }
 
-        GameManager.instance.AIControllerList.Add(this);    //Add this controller to the Game Manager AI Controller List
-
-
+        GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
     }
 
     //When the controller is destroyed
@@ -97,14 +112,11 @@ public class AIController : Controller
             //In Chase State
             case AIState.Chase:
                 DoChase(); //Chase the Target
-                if (target == null)
-                {
-                    ChangeState(AIState.Guard);
-                }
+
                 //Is the Target too far away?
                 if (!IsDistanceLessThan(target, chaseDistance))
                 {
-                    ChangeState(AIState.Guard); //go back to guard state
+                    ChangeState(AIState.BackToPost); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
                 if (CanSee(target) && IsDistanceLessThan(target, attackRange))
@@ -122,6 +134,7 @@ public class AIController : Controller
                 break;
             //In Patrol State
             case AIState.Patrol:
+                DoPatrol();
                 //Can the AI hear the player?
                 if (CanHear(target))
                 {
@@ -139,7 +152,7 @@ public class AIController : Controller
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(target))
+                if (!CanSee(target) && hasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -166,6 +179,10 @@ public class AIController : Controller
 
                 if (CanSee(target)) { ChangeState(AIState.Chase); }
                 if (CanHear(target)) { ChangeState(AIState.Scan); }
+                if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+                {
+                    ChangeState(AIState.Guard);
+                }
 
                 break;
             //In Unknown State
@@ -203,7 +220,7 @@ public class AIController : Controller
         //If no healthiest Enemy: Go back to seek out current Post
         if (currHealthiestAI == this)
         {
-            Seek(wayPoints[currWaypointID].position); //Go back to your waypoint
+            Seek(GetPostPos()); //Go back to your waypoint
         }
         else
         {
@@ -213,23 +230,25 @@ public class AIController : Controller
     //---Patrol Action
     public void DoPatrol()
     {
-        Vector3 postPos = wayPoints[currWaypointID].position;
-
-        //While the current waypoint ID is within the waypoint Array bounds
-        if (currWaypointID <= wayPoints.Count - 1 || currWaypointID >= 0)
+        if (wayPoints == null || wayPoints.Count == 0)
         {
-            Seek(postPos);
-
-            if (pawn.transform.position == postPos && hasTimePassed(PostSpan))
-            {
-                currWaypointID += 1 * directionSwitch;
-            }
+            Debug.LogWarning("No waypoints set for patrol.");
+            return;
         }
-        //Reached the end of the waypoint array
-        else
+
+        if (currWaypointID >= 0 && currWaypointID < wayPoints.Count)
         {
-            directionSwitch = directionSwitch * -1; //Flip the Direction switch
-            currWaypointID += 1 * directionSwitch; //Go back into the waypoint array range
+            Seek(currWayPoint);
+            if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+            {
+                currWaypointID += directionSwitch;
+                if (currWaypointID >= wayPoints.Count || currWaypointID < 0)
+                {
+                    directionSwitch *= -1;
+                    currWaypointID += directionSwitch;
+                }
+                UpdatePost(currWaypointID);
+            }
         }
     }
     //---Attack Action
@@ -241,28 +260,24 @@ public class AIController : Controller
     //---Scanning Action
     public void DoScan()
     {
-        pawn.TurnClockwise(pawn.turnSpeed);
+        pawn.TurnClockwise(pawn.turnSpeed); //rotate
     }
     //---BackToPost Action
     public void DoBackToPost()
     {
-        Seek(wayPoints[currWaypointID].position);
+        Seek(GetPostPos()); //go to the current waypoint
     }
 
     //---ACTION FUNCTIONS---
     //---Seeking out target
     public void Seek(GameObject target) //Seek GameObject
     {
-        //===OBSTACLE AVOIDANCE===
-        if (ShouldAvoidObstacle() && !CanSee(target))
-        {
-            AvoidObstacles();
-        }
         //Look at the Game Objects Position
         Seek(target.transform.position);
     }
     public void Seek(Vector3 targetPosition) //Seek Position
     {
+        Vector3 directionToPos = targetPosition - pawn.transform.position;
 
         //===OBSTACLE AVOIDANCE===
         if (ShouldAvoidObstacle())
@@ -275,11 +290,9 @@ public class AIController : Controller
         {
             //Look at the position
             pawn.RotateTowards(targetPosition);
+            //Move Foward
+            pawn.MoveForward(pawn.movementSpeed);
         }
-
-
-        //Move Foward
-        pawn.MoveForward();
     }
 
     //Function used to move around obstacles
@@ -300,10 +313,17 @@ public class AIController : Controller
 
             float steerSpeed = pawn.turnSpeed * steeringAdjustPercent; //the turning speed with modifier
 
+            // Implement friction or deceleration when turning
+            float forwardSpeedAdjustment = Mathf.Lerp(pawn.movementSpeed, pawn.movementSpeed * 0.5f, steeringAdjustPercent); // Reduce speed during turns
+
+            pawn.MoveForward(forwardSpeedAdjustment); // Move forward with adjusted speed
+
             pawn.TurnClockwise(steerSpeed); //Rotate Clockwise with the AdjustedSpeed
         }
-
-        pawn.MoveForward();
+        else
+        {
+            pawn.MoveForward(pawn.movementSpeed);
+        }
     }
     //Helps find The Healthiest AI
     public AIController FindHealthiestAI()
@@ -325,6 +345,17 @@ public class AIController : Controller
         }
 
         return currHealthiest; //return the found healthiest AI
+    }
+    public bool isHealthBelow(double percentage)
+    {
+        HealthSystem HP = pawn.GetComponent<HealthSystem>();
+        if (HP != null)
+        {
+            double currPercentage = HP.currHealth / HP.maxHealth;
+
+            return currPercentage < percentage;
+        }
+        return false;
     }
     //---CONDITION FUNCTIONS---
     //Checks if there's an Obstacle in front of the agent
@@ -394,11 +425,11 @@ public class AIController : Controller
         //Make sure the target makes noise
         if (noiseMaker == null) { return false; }
         //Make sure the target's noise has a volume
-        if (noiseMaker.volumeDistance <= 0) { return false; }
+        if (noiseMaker.noiseDistance <= 0) { return false; }
 
         //===| HEARING TEST |===
         //Farthest distance the AI would be able to hear the targetted noise
-        float totalDistance = noiseMaker.volumeDistance + hearingDistance;
+        float totalDistance = noiseMaker.noiseDistance + hearingDistance;
 
         //Checks if the AI distance from the target is within the total hearing distance calculated
         if (Vector3.Distance(pawn.transform.position, target.transform.position) <= totalDistance)
@@ -428,6 +459,19 @@ public class AIController : Controller
         return false; // Target is not within FOV
     }
 
+    //Get Position of current WayPoint
+    public Vector3 GetPostPos()
+    {
+        // Ensure there are waypoints and the current waypoint ID is valid
+        if (wayPoints == null || wayPoints.Count == 0 || currWaypointID < 0 || currWaypointID >= wayPoints.Count)
+        {
+            Debug.LogError("GetPostPos(): Invalid waypoints or currWaypointID out of range.");
+            return Vector3.zero; // Return a default position or handle appropriately
+        }
+
+        return currWayPoint.transform.position;
+    }
+
     //Get an Game Object from a Raycast
     private GameObject ShootRaycast(Vector3 direction, float length)
     {
@@ -442,5 +486,14 @@ public class AIController : Controller
         }
 
         return null; //No Game Object seen
+    }
+
+    //Used to update the information for the current post
+    private void UpdatePost(int postID)
+    {
+        currWaypointID = postID;    //Set the Current Way Point ID
+        Mathf.Clamp(currWaypointID, 0, wayPoints.Count - 1); //Make sure WaypointID is within the range of the waypoint list
+        currWayPointScript = wayPoints[currWaypointID];      //Set the Current Waypoint Script
+        currWayPoint = currWayPointScript.gameObject;        //Set up the Current Waypoint Object
     }
 }

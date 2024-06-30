@@ -10,21 +10,7 @@ public class PlayerController : Controller
     //ACTION KEYS
     public KeyCode Primary;
 
-    private NoiseMaker noiseMaker; //Makes for AI to sense Noises
-    public float noiseDistance = 10;
-    //Structure of Volumes used for different noises the player makes
-    public struct noiseVolumeStruct
-    {
-        public float movementVolume;
-        public float turnVolume;
-        public float primaryFireVolume;
-    } 
-    public noiseVolumeStruct noiseVolumes;
-
-    private void Awake()
-    {
-        
-    }
+    public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
     // Start is called before the first frame update
     void Start()
@@ -52,54 +38,33 @@ public class PlayerController : Controller
         //============| MOVEMENT |============
         if (Input.GetKey(MoveForward))
         {
-            pawn.MoveForward();
-            //Is there a noise maker?
-            if (noiseMaker != null)
-            {
-                //Is there a noise maker?
-                if (noiseMaker != null)
-                {
-                    noiseMaker.volumeDistance = noiseDistance; //make movement sound
-                }
-                else
-                {
-                    noiseMaker.volumeDistance = 0;  // no movement sound
-                }
-            }
+            pawn.MoveForward(pawn.movementSpeed);
+            noiseMaker.MakeNoise(noiseMaker.movementVolume);
         }
         if (Input.GetKey(MoveBackward))
         {
-            pawn.MoveBackwards();
-            //Is there a noise maker?
-            if (noiseMaker != null)
-            {
-                noiseMaker.volumeDistance = noiseDistance; //make movement sound
-            }
-            else
-            {
-                noiseMaker.volumeDistance = 0;  // no movement sound
-            }
+            pawn.MoveBackwards(pawn.movementSpeed);
+            noiseMaker.MakeNoise(noiseMaker.movementVolume);
+
         }
         if (Input.GetKey(TurnLeft))
         {
             pawn.TurnCounterClockwise(pawn.turnSpeed);
+            noiseMaker.MakeNoise(noiseMaker.turnVolume);
         }
         if (Input.GetKey(TurnRight))
         {
             pawn.TurnClockwise(pawn.turnSpeed);
+            noiseMaker.MakeNoise(noiseMaker.turnVolume);
         }
 
         //============| ACTIONS |============
-            // - PRIMARY ABILITY
+        // - PRIMARY ABILITY
         if (Input.GetKeyDown(Primary))
         {
             //tank Shooting goes here
             pawn.Primary();
-            MakeNoise(noiseVolumes.movementVolume);
+            noiseMaker.MakeNoise(noiseMaker.primaryFireVolume);
         }
-    }
-
-    private void MakeNoise(float noiseVolume) { 
-        noiseDistance = noiseVolume;
     }
 }

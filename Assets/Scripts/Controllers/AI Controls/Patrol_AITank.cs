@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static AIController;
+using static UnityEngine.GraphicsBuffer;
 
-public class Scared_AITank : AIController
+public class Patrol_AITank : AIController
 {
-    public float followDistance;
 
+    //Overridding function to process the different inputs of the contoller (AKA: The FSM)
     public override void ProcessInputs()
     {
         //Is there a target to interact with?
@@ -31,19 +33,19 @@ public class Scared_AITank : AIController
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
+                if (hasTimePassed(PostSpan)){
+                    ChangeState(AIState.Patrol);
+                }
 
                 break;
             //In Chase State
             case AIState.Chase:
                 DoChase(); //Chase the Target
-                if (target == null)
-                {
-                    ChangeState(AIState.Guard);
-                }
+
                 //Is the Target too far away?
                 if (!IsDistanceLessThan(target, chaseDistance))
                 {
-                    ChangeState(AIState.Guard); //go back to guard state
+                    ChangeState(AIState.BackToPost); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
                 if (CanSee(target) && IsDistanceLessThan(target, attackRange))
@@ -56,16 +58,10 @@ public class Scared_AITank : AIController
                     ChangeState(AIState.Scan);
                 }
                 break;
-            //In Flee State
-            case AIState.Flee:
-                DoFlee();
-                if(IsDistanceLessThan(FindHealthiestAI().gameObject, followDistance) && FindHealthiestAI() != this)
-                {
-                    ChangeState(AIState.Scan);
-                } //If it's close enough to the ally
-                break;
             //In Patrol State
             case AIState.Patrol:
+                DoPatrol();
+
                 //Can the AI hear the player?
                 if (CanHear(target))
                 {
@@ -83,14 +79,9 @@ public class Scared_AITank : AIController
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(target))
+                if (!CanSee(target) && hasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
-                }
-                //Is Health Below half?
-                if (isHealthBelow(.50))
-                {
-                    ChangeState(AIState.Flee); //Run to a healthier tank
                 }
                 break;
             //In Scan State
@@ -115,6 +106,10 @@ public class Scared_AITank : AIController
 
                 if (CanSee(target)) { ChangeState(AIState.Chase); }
                 if (CanHear(target)) { ChangeState(AIState.Scan); }
+                if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+                {
+                    ChangeState(AIState.Guard);
+                }
 
                 break;
             //In Unknown State
