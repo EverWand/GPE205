@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     //---AI Controllers
     public List<AIController> AIControllerList = new List<AIController>();
     //---WayPoints
-    public Transform[] wayPoints;
+    public List<Transform> wayPoints;
 
     public void Awake()
     {
