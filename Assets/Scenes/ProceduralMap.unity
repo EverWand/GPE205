@@ -132,6 +132,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapGenerator
       objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: rows
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: seed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: columns
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: seedMode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7330584755924476621, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
       propertyPath: m_LocalPosition.x
