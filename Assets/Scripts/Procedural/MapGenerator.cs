@@ -16,13 +16,6 @@ public class MapGenerator : MonoBehaviour
     public SeedTypes seedMode;
     public int seed;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        GenerateMap();
-    }
-
     public GameObject randomRoomPrefab() {
         return roomTiles[UnityEngine.Random.Range(0, roomTiles.Length)];
     }

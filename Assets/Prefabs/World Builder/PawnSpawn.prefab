@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8468318661327657620}
-  - component: {fileID: 25528042436764589}
+  - component: {fileID: 675555165266321047}
   m_Layer: 0
-  m_Name: PlayerSpawn
+  m_Name: PawnSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 8474746798517546650}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -0.603, z: 0}
---- !u!114 &25528042436764589
+--- !u!114 &675555165266321047
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 863183083294523057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 826394a696acf4b478586ffb56b00cef, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cfce236156d1944fb5a1126603ea47b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1342169385995689357

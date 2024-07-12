@@ -16,7 +16,7 @@ public class PlayerController : Controller
     void Start()
     {
         //add player to the Game Managanger
-        GameManager.instance.PlayersList.Add(this);
+        GameManager.instance.playerList.Add(this);
 
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
@@ -31,8 +31,9 @@ public class PlayerController : Controller
     private void OnDestroy()
     {
         //add player to the Game Managanger
-        GameManager.instance.PlayersList.Remove(this);
+        GameManager.instance.playerList.Remove(this);
     }
+
     public override void ProcessInputs()
     {
         //============| MOVEMENT |============
