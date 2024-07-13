@@ -5,19 +5,17 @@ using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour
 {
-    public GameObject PickupPrefab;
-    public float spawnDelay;
-
-    private float nextSpawnTime;
-    private Transform tf;
-    private GameObject spawnedPickup;
+    public GameObject PickupPrefab; //The Pickup prefab that is being spawned
+    public float spawnDelay;        //The delay of the spawn time
+    private float nextSpawnTime;    //Tracks the next spawn time once the delay is done
+    private Transform tf;           //for setting the pickup transform
 
     // Start is called before the first frame update
     void Start()
     {
-        nextSpawnTime = Time.time * spawnDelay;
+        nextSpawnTime = Time.time * spawnDelay; //sets the time for the delay
 
-        tf = transform;
+        tf = transform; //The transform of the Pickup
     }
 
     // Update is called once per frame

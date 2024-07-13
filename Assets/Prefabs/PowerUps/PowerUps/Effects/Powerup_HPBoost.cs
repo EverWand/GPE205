@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Powerup_Health : Powerup
+[System.Serializable]
+
+public class Powerup_HPBoost : Powerup
 {
     public float healthToAdd;
 
