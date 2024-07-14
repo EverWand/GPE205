@@ -9,11 +9,12 @@ public class PickupSpawner : MonoBehaviour
     public float spawnDelay;        //The delay of the spawn time
     private float nextSpawnTime;    //Tracks the next spawn time once the delay is done
     private Transform tf;           //for setting the pickup transform
+    private GameObject spawnedPickUp;
 
     // Start is called before the first frame update
     void Start()
     {
-        nextSpawnTime = Time.time * spawnDelay; //sets the time for the delay
+        nextSpawnTime = Time.time + spawnDelay; //sets the time for the delay
 
         tf = transform; //The transform of the Pickup
     }
@@ -24,7 +25,7 @@ public class PickupSpawner : MonoBehaviour
         //is time to spawn pickup:
         if (Time.time > nextSpawnTime)
         {
-            Instantiate(PickupPrefab, tf.position, Quaternion.identity); //spawn the pick up
+            spawnedPickUp = Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject; //spawn the pick up
 
             nextSpawnTime = Time.time + spawnDelay; //Add new delay time                                     
         }

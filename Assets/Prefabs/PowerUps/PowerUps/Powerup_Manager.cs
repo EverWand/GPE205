@@ -44,7 +44,7 @@ public class Powerup_Manager : MonoBehaviour
         {
             powerup.duration -= Time.deltaTime;
 
-            if (powerup.duration <= 0 && !powerup.isPermantent)
+            if (powerup.duration <= 0 && !powerup.isPermanent)
             {
                 Remove(powerup);
             }

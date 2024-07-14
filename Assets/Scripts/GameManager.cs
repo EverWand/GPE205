@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         mapGenerator = GetComponent<MapGenerator>();
         mapGenerator.GenerateMap();
 
-        for (int id = 0; id <= numberOfPlayers; id++)
+        for (int id = 0; id < numberOfPlayers; id++)
         {
             SpawnPlayer(); //Spawn the Player into the Scene
         }
