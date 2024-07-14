@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Pickup_DmgUp : Pickup
 {
-    // Start is called before the first frame update
-    void Start()
+    public Powerup_DmgBoost powerup;    //set the powerup Effect
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
+        //Store variable to object Powerup manager
+        Powerup_Manager manager = other.GetComponent<Powerup_Manager>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //Powerup Manager Obtained:
+        if (manager)
+        {
+            manager.Add(powerup);   //Add Power Up to te Manager
+            Destroy(gameObject);    //Destroy the Powerup Object
+        }
     }
 }

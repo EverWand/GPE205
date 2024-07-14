@@ -12,7 +12,7 @@ public class Tank_Pawn : Pawn
         shooter = gameObject.GetComponent<Shooter>();
         noiseMaker = gameObject.GetComponent<NoiseMaker>();
     }
-    
+
     //===| PAWN KINEMATICS |===
     public override void MoveForward(float speed) //Move the tank Forwards using rigid body
     {

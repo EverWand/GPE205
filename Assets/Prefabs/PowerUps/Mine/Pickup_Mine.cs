@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickup_HPBoost : Pickup
+public class Pickup_Mine : Pickup
 {
-    public Powerup_HPBoost powerup;    //set the HPBoost Effect
+    public PowerUp_TakeDamage powerup;    //set the powerup Effect
     private void OnTriggerEnter(Collider other)
     {
         //Store variable to object Powerup manager

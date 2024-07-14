@@ -29,9 +29,5 @@ public class PickupSpawner : MonoBehaviour
 
             nextSpawnTime = Time.time + spawnDelay; //Add new delay time                                     
         }
-        else
-        {
-            nextSpawnTime = Time.time + spawnDelay; //Object Exists, postpone spawn time
-        }
     }
 }
