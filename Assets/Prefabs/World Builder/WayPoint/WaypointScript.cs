@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaypointScript : MonoBehaviour
-{   
+{
+    public WaypointScript nextWaypoint; //Saves the next Waypoint this one leads to
+
     public float posThreshold = 1;
     // Start is called before the first frame update
     void Start()

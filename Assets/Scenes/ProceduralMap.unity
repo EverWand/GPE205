@@ -158,6 +158,14 @@ MonoBehaviour:
   playerList: []
   pawnSpawns: []
   AIControllerList: []
+  AI_BasePrefab: {fileID: 5505466909321833275, guid: fd1952920709eb14789259560286d19f,
+    type: 3}
+  AI_PatrollerPrefab: {fileID: 6162532283743526779, guid: 98be221643023af429a7eb0bd86c6503,
+    type: 3}
+  AI_AfraidPrefab: {fileID: 5291069845271002411, guid: b4f1d96cef99b5e4aba3820dac5cf649,
+    type: 3}
+  AI_TurretPrefab: {fileID: 5961851102785833854, guid: e20c9d28bf191d64dac5e862f9b00de8,
+    type: 3}
   wayPoints: []
 --- !u!4 &1131575352
 Transform:
@@ -186,15 +194,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa9aadeeb6e57847a647f182e11e437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rows: 5
+  columns: 5
+  roomWidth: 50
+  roomHeight: 50
   roomTiles:
   - {fileID: 121816, guid: 41d4243be8ad3a5409422171976de7ff, type: 3}
   - {fileID: 121816, guid: 8cda62104b527344ca308eea35bb3b5a, type: 3}
   - {fileID: 121816, guid: 9695272bc6575eb4091896a8e00b3043, type: 3}
   - {fileID: 121816, guid: 1cc4c46b9e0b0a84db595afc61feb279, type: 3}
-  rows: 5
-  columns: 5
-  roomWidth: 50
-  roomHeight: 50
+  enemyDensity: 0.2
+  listOfAIBehaviors:
+  - {fileID: 8266178016315733112, guid: fd1952920709eb14789259560286d19f, type: 3}
+  - {fileID: 1806872591436864860, guid: 98be221643023af429a7eb0bd86c6503, type: 3}
+  - {fileID: 6489263300923986275, guid: b4f1d96cef99b5e4aba3820dac5cf649, type: 3}
+  - {fileID: 1461379368817835112, guid: e20c9d28bf191d64dac5e862f9b00de8, type: 3}
+  RequiredAI:
+  - {fileID: 8266178016315733112, guid: fd1952920709eb14789259560286d19f, type: 3}
+  - {fileID: 1806872591436864860, guid: 98be221643023af429a7eb0bd86c6503, type: 3}
+  - {fileID: 6489263300923986275, guid: b4f1d96cef99b5e4aba3820dac5cf649, type: 3}
+  - {fileID: 1461379368817835112, guid: e20c9d28bf191d64dac5e862f9b00de8, type: 3}
   seedMode: 1
   seed: 0
 --- !u!1 &1254640690

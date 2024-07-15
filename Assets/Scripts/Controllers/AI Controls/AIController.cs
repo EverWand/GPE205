@@ -57,7 +57,7 @@ public class AIController : Controller
             ChangeState(AIState.Guard);   // Default to the Guard State
 
             // Spawn a Waypoint at the current position of the AI
-            currWayPoint = Instantiate(wayPointPrefab, pawn.transform.position, Quaternion.identity);
+            // currWayPoint = Instantiate(wayPointPrefab, pawn.transform.position, Quaternion.identity);
 
             // Add the waypoint to the needed lists
             GameManager.instance.wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());

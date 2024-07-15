@@ -5,16 +5,34 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public GameObject[] roomTiles;
+    //MAP VARIABLES
+    //---Map Size
     public int rows;
     public int columns;
+    //---Room Size
     public float roomWidth = 50f;
     public float roomHeight = 50f;
-    private Room[,] grid;
 
+    //MAP OBJECTS
+    //---Map Grid
+    public GameObject[] roomTiles;  //The types of Map Tiles the Map can generate
+    private Room[,] grid;           //Matrix of the rooms
+    //---Map Content
+    //------AI
+    public float enemyDensity = .2f;    //The Percentage of how many spawners produce AI
+    public List<AIController> listOfAIBehaviors = new List<AIController>();  //The Types of Behavior the Map can spawn
+    public List<AIController> RequiredAI = new List<AIController>();        //The type of Behaviors the Map Has to spawn
+
+    //SEED
     public enum SeedTypes { Preset, Random, Daily, Time}
     public SeedTypes seedMode;
     public int seed;
+
+    //SCHEDULES
+    private void Awake()
+    {
+        enemyDensity = Mathf.Clamp01(enemyDensity); //keep the AI density between 0% - 100%
+    }
 
     public GameObject randomRoomPrefab() {
         return roomTiles[UnityEngine.Random.Range(0, roomTiles.Length)];
