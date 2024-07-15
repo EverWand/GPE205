@@ -61,15 +61,7 @@ public class GameManager : MonoBehaviour
         {
             SpawnPlayer(); //Spawn the Player into the Scene
         }
-
-        try //catch any errors when setting default target to all AI's
-        {
-            SetDefaultAITarget(playerCharacter); //set default AI Target to all AIs
-        }
-        //Log Debug Message if it catches the an error
-        catch { Debug.Log("no Player character can be wset as the Default Targer"); } 
-
-
+        SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
     }
 
     //====| FUNCTIONS |====
@@ -122,25 +114,28 @@ public class GameManager : MonoBehaviour
     //Specific AI Spawn
     private void SpawnEnemyOfType(AIController behaviorType) 
     {
+        PawnSpawner spawn = getRandPawnSpawn();
         switch (behaviorType)
         {
+            
             //PATROL
             case Patrol_AITank:
-                SpawnPatrolAI(getRandPawnSpawn());
+                SpawnPatrolAI(spawn);
                 break;
             //SCARED
             case Scared_AITank:
-                SpawnScaredAI(getRandPawnSpawn());
+                SpawnScaredAI(spawn);
                 break;
             //TURRET
             case Turret_AITank:
-                SpawnTurretAI(getRandPawnSpawn());
+                SpawnTurretAI(spawn);
                 break;
             default:    //unfamiliar or Base AI Controller : Make a Default AI
-                SpawnBaseAI(getRandPawnSpawn());
+                SpawnBaseAI(spawn);
                 break;
-
         }
+
+        behaviorType.currWayPoint = spawn.gameObject; //set the Spawnpoint as the Ai's current waypoint
     }
 
     //Basic AI Spawn
@@ -187,7 +182,7 @@ public class GameManager : MonoBehaviour
         foreach (AIController AI in AIControllerList)
         {
             //and if that AIController doesn't have a target Set...
-            if (!AI.target)
+            if (AI.target == null)
             {
                 //Set it to the specific target
                 AI.target = target;
