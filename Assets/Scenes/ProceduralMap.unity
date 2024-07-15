@@ -194,8 +194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa9aadeeb6e57847a647f182e11e437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 3
-  columns: 3
+  rows: 10
+  columns: 10
   roomWidth: 50
   roomHeight: 50
   roomTiles:
@@ -203,7 +203,7 @@ MonoBehaviour:
   - {fileID: 121816, guid: 8cda62104b527344ca308eea35bb3b5a, type: 3}
   - {fileID: 121816, guid: 9695272bc6575eb4091896a8e00b3043, type: 3}
   - {fileID: 121816, guid: 1cc4c46b9e0b0a84db595afc61feb279, type: 3}
-  enemyDensity: 4.14
+  enemyDensity: 0.002
   listOfAIBehaviors:
   - {fileID: 8266178016315733112, guid: fd1952920709eb14789259560286d19f, type: 3}
   - {fileID: 1806872591436864860, guid: 98be221643023af429a7eb0bd86c6503, type: 3}

@@ -25,8 +25,10 @@ public class PickupSpawner : MonoBehaviour
         //is time to spawn pickup:
         if (Time.time > nextSpawnTime)
         {
-            spawnedPickUp = Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject; //spawn the pick up
-
+            if (spawnedPickUp == null)
+            {
+                spawnedPickUp = Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject; //spawn the pick up
+            }
             nextSpawnTime = Time.time + spawnDelay; //Add new delay time                                     
         }
     }
