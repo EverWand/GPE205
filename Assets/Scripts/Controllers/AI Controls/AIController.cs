@@ -42,6 +42,11 @@ public class AIController : Controller
 
     private int directionSwitch = 1;            // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
 
+    private void Awake()
+    {
+        GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,8 +76,6 @@ public class AIController : Controller
             UpdatePost(currWaypointID);
             ChangeState(AIState.Patrol); // Default to Patrol State
         }
-
-        GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
     }
 
     //When the controller is destroyed

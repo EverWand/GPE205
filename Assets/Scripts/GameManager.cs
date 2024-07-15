@@ -181,8 +181,9 @@ public class GameManager : MonoBehaviour
         //For every AI Controller Found...
         foreach (AIController AI in AIControllerList)
         {
+            Debug.Log("Testing target of AI: " + AI.gameObject);
             //and if that AIController doesn't have a target Set...
-            if (AI.target == null)
+            if (!AI.target)
             {
                 //Set it to the specific target
                 AI.target = target;
