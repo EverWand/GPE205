@@ -218,7 +218,7 @@ MonoBehaviour:
   - {fileID: 1806872591436864860, guid: 98be221643023af429a7eb0bd86c6503, type: 3}
   - {fileID: 6489263300923986275, guid: b4f1d96cef99b5e4aba3820dac5cf649, type: 3}
   - {fileID: 1461379368817835112, guid: e20c9d28bf191d64dac5e862f9b00de8, type: 3}
-  pickupDensity: 0.2
+  pickupDensity: 0.4
 --- !u!1 &1254640690
 GameObject:
   m_ObjectHideFlags: 0

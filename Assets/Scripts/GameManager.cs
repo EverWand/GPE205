@@ -56,7 +56,9 @@ public class GameManager : MonoBehaviour
         mapGenerator = GetComponent<MapGenerator>();    //set the map generator
         mapGenerator.GenerateMap();                     //Make the Map
         //---Creating the Enemies
-        GenerateEnemies();                              //Generate the Enemies
+        GenerateEnemies();
+        //---Enable the Spawners
+        EnablePickUpSpawners();
 
         //for every players there are meant to be:
         for (int id = 0; id < numberOfPlayers; id++)
@@ -111,16 +113,24 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    //Enables certains spawns 
     private void EnablePickUpSpawners() 
     {
         //get the amount of pick up spawners to activate
-        int spawnsToEnable = ((int)pickupSpawns.Count * mapGenerator.pickupDensity);    
+        int spawnsToEnable = (int)(pickupSpawns.Count * mapGenerator.pickupDensity);    
         
         for(int i = 0; i < spawnsToEnable; i++) 
         {
-            int ranSpawn = Random.Range(0, Spawns.Count);
-
-            pickupSpawns[ranSpawn].SetEnabled(true);
+            //Get a random spawn Index
+            int ranSpawn = Random.Range(0, pickupSpawns.Count);
+            
+            //while the random spawn is already active
+            while (pickupSpawns[ranSpawn].isActive) {
+                // find a new random spawner
+                ranSpawn = Random.Range(0, pickupSpawns.Count); 
+            }
+            //set the spawner as active
+            pickupSpawns[ranSpawn].SetActive(true);
         }
     }
     //--- SPAWNING AIs ---

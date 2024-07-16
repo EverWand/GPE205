@@ -9,6 +9,18 @@ public class PickupSpawner : MonoBehaviour
     private Transform tf;           //for setting the pickup transform
     private GameObject spawnedPickUp;
 
+
+    //====SCHEDULES
+    //ADD|REMOVE from Game manager
+    private void Awake()
+    {
+        GameManager.instance.pickupSpawns.Add(this);
+    }
+    private void OnDestroy()
+    {
+        GameManager.instance.pickupSpawns.Remove(this);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,14 +34,11 @@ public class PickupSpawner : MonoBehaviour
         if (isActive && Time.time > nextSpawnTime)
         {
             //spawn the pick up if there's not one out yet
-            spawnedPickUp ??= Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject; 
-        }
-    }
+            spawnedPickUp ??= Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject;
 
-    //EVENT HANDLER: Powerup was picked up
-    private void HandlePowerupPickup()
-    {
-        nextSpawnTime = Time.time + spawnDelay; //Add new delay time
+            nextSpawnTime = Time.time + spawnDelay; //Add new delay time
+        }
+
     }
 
     public void SetActive(bool enabled)
