@@ -9,6 +9,8 @@ public class Pickup_HPBoost : Pickup
     {
         //Store variable to object Powerup manager
         Powerup_Manager manager = other.GetComponent<Powerup_Manager>();
+        PickedUp.Invoke();
+
 
         //Powerup Manager Obtained:
         if (manager)

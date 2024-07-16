@@ -1166,6 +1166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2c495c955602984aa5bce802074a3b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PickedUp:
+    m_PersistentCalls:
+      m_Calls: []
   powerup:
     duration: 0
     isPermanent: 1

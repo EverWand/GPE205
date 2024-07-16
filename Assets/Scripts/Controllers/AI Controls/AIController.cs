@@ -50,10 +50,8 @@ public class AIController : Controller
     // Start is called before the first frame update
     void Start()
     {
-        if (wayPoints == null)
-        {
-            wayPoints = new List<WaypointScript>();
-        }
+        wayPoints ??= new List<WaypointScript>(); //Created a new list instance if it is originally null
+
 
         // Does the AI have any waypoints?
         if (wayPoints.Count <= 0)

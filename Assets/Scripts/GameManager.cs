@@ -17,12 +17,14 @@ public class GameManager : MonoBehaviour
 
     //====| GameObject Lists |====
     //---Players
-    public List<PlayerController> playerList = new List<PlayerController>();   //Controllers
-    public List<PawnSpawner> pawnSpawns = new List<PawnSpawner>();  //List of all the PlayerSpawners
-
+    public List<PlayerController> playerList = new();   //Controllers
+    public List<PawnSpawner> pawnSpawns = new();             //List of all the Possible spawn locations for the 
+    //---Pickups
+    public List<PickupSpawner> pickupSpawns = new();  //List of all the Pick up Spawns
+    public List<Pickup> Pickups = new();
     //---AI
     //------Controllers
-    public List<AIController> AIControllerList = new List<AIController>();
+    public List<AIController> AIControllerList = new();
     //------AI Types
     public GameObject AI_BasePrefab;
     public GameObject AI_PatrollerPrefab;
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
     public GameObject AI_TurretPrefab;
 
     //---WayPoints
-    public List<WaypointScript> wayPoints = new List<WaypointScript>();
+    public List<WaypointScript> wayPoints = new();
 
     //====| SCHEDULES |====
     public void Awake()
@@ -109,7 +111,10 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
+    private void GeneratePickUps() 
+    {
+        
+    }
     //--- SPAWNING AIs ---
     //Specific AI Spawn
     private void SpawnEnemyOfType(AIController behaviorType) 
