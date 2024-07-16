@@ -111,9 +111,17 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    private void GeneratePickUps() 
+    private void EnablePickUpSpawners() 
     {
+        //get the amount of pick up spawners to activate
+        int spawnsToEnable = ((int)pickupSpawns.Count * mapGenerator.pickupDensity);    
         
+        for(int i = 0; i < spawnsToEnable; i++) 
+        {
+            int ranSpawn = Random.Range(0, Spawns.Count);
+
+            pickupSpawns[ranSpawn].SetEnabled(true);
+        }
     }
     //--- SPAWNING AIs ---
     //Specific AI Spawn

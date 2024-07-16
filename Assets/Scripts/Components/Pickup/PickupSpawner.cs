@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PickupSpawner : MonoBehaviour
 {
-    public bool isActive = false;
+    public bool isActive = false;   //Checks if this Spawner is active
     public GameObject PickupPrefab; //The Pickup prefab that is being spawned
     public float spawnDelay;        //The delay of the spawn time
     private float nextSpawnTime;    //Tracks the next spawn time once the delay is done
