@@ -5,6 +5,7 @@ using UnityEngine;
 public class Pickup_HPBoost : Pickup
 {
     public Powerup_HPBoost powerup;    //set the HPBoost Effect
+
     private void OnTriggerEnter(Collider other)
     {
         //Store variable to object Powerup manager

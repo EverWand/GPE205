@@ -34,11 +34,12 @@ public class PickupSpawner : MonoBehaviour
         if (isActive && Time.time > nextSpawnTime)
         {
             //spawn the pick up if there's not one out yet
-            spawnedPickUp ??= Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject;
-
+            if (spawnedPickUp == null)
+            {
+                spawnedPickUp = Instantiate(PickupPrefab, tf.position, Quaternion.identity) as GameObject;
+            }
             nextSpawnTime = Time.time + spawnDelay; //Add new delay time
         }
-
     }
 
     public void SetActive(bool enabled)

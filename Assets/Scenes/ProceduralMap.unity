@@ -196,12 +196,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa9aadeeb6e57847a647f182e11e437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 4
-  columns: 4
+  rows: 5
+  columns: 5
   roomWidth: 50
   roomHeight: 50
-  seedMode: 1
-  seed: 0
+  seedMode: 0
+  seed: 10
   roomTiles:
   - {fileID: 121816, guid: 41d4243be8ad3a5409422171976de7ff, type: 3}
   - {fileID: 121816, guid: 8cda62104b527344ca308eea35bb3b5a, type: 3}
