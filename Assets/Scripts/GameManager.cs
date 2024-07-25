@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -7,6 +6,14 @@ public class GameManager : MonoBehaviour
     //====| VARIABLES |====
     public static GameManager instance;
     public static MapGenerator mapGenerator;
+
+    //Game States
+    public GameObject TitleScreenObject;
+    public GameObject MainMenuScreenObject;
+    public GameObject OptionsObject;
+    public GameObject CreditsObject;
+    public GameObject GameplayObject;
+    public GameObject GameOverObject;
 
     //Player References
     public int numberOfPlayers = 1; //decides how many players there should be
@@ -34,8 +41,9 @@ public class GameManager : MonoBehaviour
     //---WayPoints
     public List<WaypointScript> wayPoints = new();
 
+
     //====| SCHEDULES |====
-    public void Awake()
+    private void Awake()
     {
         //Game Manager Persistent Instance Set Up:
         //If there's no instance made yet
@@ -49,7 +57,62 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject); //Delete the new game instance
         }
     }
-    public void Start()
+    private void Start()
+    {
+        ActivateTitleScreen();  //Start on the Title Screen
+    }
+
+    //==== GAME STATES ==== 
+    //Deactivates all Game States
+    private void DeactivateAllGameStates()
+    {
+        TitleScreenObject.SetActive(false);
+        MainMenuScreenObject.SetActive(false);
+        OptionsObject.SetActive(false);
+        CreditsObject.SetActive(false);
+        GameplayObject.SetActive(false);
+        GameOverObject.SetActive(false);
+    }
+
+    //---TITLE
+    public void ActivateTitleScreen()
+    {
+        DeactivateAllGameStates();          //reset all current game states
+        TitleScreenObject.SetActive(true);  //Activate Title Screen
+    }
+    //---MAIN MENU
+    public void ActivateMainMenuScreen()
+    {
+        DeactivateAllGameStates();          //reset all current game states
+        MainMenuScreenObject.SetActive(true);  //Activate Title Screen
+    }
+    //---OPTIONS
+    public void ActivateOptions()
+    {
+        DeactivateAllGameStates();          //reset all current game states
+        OptionsObject.SetActive(true);  //Activate Title Screen
+    }
+    //---CREDITS
+    public void ActivateCredits()
+    {
+        DeactivateAllGameStates();          //reset all current game states
+        CreditsObject.SetActive(true);  //Activate Title Screen
+    }
+    //---GAMEPLAY
+    public void ActivateGameplay()
+    {
+        DeactivateAllGameStates();  //reset all current game states
+        StartGame();                //Start the Game        
+    }
+    //---GAME OVER
+    public void ActivateGameOverScreen()
+    {
+        DeactivateAllGameStates();          //reset all current game states
+        GameOverObject.SetActive(true);  //Activate Title Screen
+    }
+
+    //Function for starting the Game
+    private void StartGame()
     {
         //Generate the Level
         //---Creating the Map
@@ -67,6 +130,19 @@ public class GameManager : MonoBehaviour
         }
         SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
     }
+    //Quits the Game
+    public void QuitGame()
+    {
+        //RUN THIS IF A UNITY APPLICATION IS BEING RAN
+#if UNITY_STANDALONE
+        Application.Quit(); //Quit the Application
+#endif
+
+        //RUN THIS IF BEING RAN IN THE EDITOR
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;    //Exits Editor playtime
+#endif
+    }
 
     //====| FUNCTIONS |====
     //instantiates the Player in the transform of the playerspawner
@@ -78,69 +154,72 @@ public class GameManager : MonoBehaviour
 
         Controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
     }
-
-    //Function that procedurally generates enemies
-    private void GenerateEnemies()
-    {
-        int AISpawnAmount = (int)(pawnSpawns.Count * mapGenerator.enemyDensity); //get's the amount of spawns should have enemy from the desity percentages
-
-        //Spawn the needed amount of enemies
-        for(int i = 0; i < AISpawnAmount; i++)
-        {
-            //Make sure we fill in the required enemies first
-            if (i < mapGenerator.RequiredAI.Count)
-            {
-                SpawnEnemyOfType(mapGenerator.RequiredAI[i]); //Spawn the required enemy from the list.
-            }
-            else {
-                int AI_ID = Random.Range(0, mapGenerator.listOfAIBehaviors.Count); //Get a random ID for AI controller the Map can generate
-                SpawnEnemyOfType(mapGenerator.listOfAIBehaviors[AI_ID]);           //Spawn that AI
-            }
-        }
-        
-        int missingAISpawns = AISpawnAmount - mapGenerator.RequiredAI.Count;    //The amount of Required AIs missing after we spawn AIs
-
-        //SPAWNING THE REST OF THE REQUIRED AIs:
-        //Are there still required AIs needing spawned and is there's still space for new spawns?
-        if (missingAISpawns > 0 && missingAISpawns <= pawnSpawns.Count - AISpawnAmount) { 
-            int listJump = mapGenerator.RequiredAI.Count - missingAISpawns; //The jump we're making for compensation of the required AI's already spawned
-
-            Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
-
-            //spawning the required enemies starting from where the initial round of spawns left off.
-            for(int i = listJump; i > mapGenerator.RequiredAI.Count; i++) {
-                SpawnEnemyOfType(mapGenerator.RequiredAI[i]); //Spawn the Required Enemy in the list from after the list Jump.
-            }
-        }
-    }
     //Enables certains spawns 
-    private void EnablePickUpSpawners() 
+    private void EnablePickUpSpawners()
     {
         //get the amount of pick up spawners to activate
-        int spawnsToEnable = (int)(pickupSpawns.Count * mapGenerator.pickupDensity);    
-        
-        for(int i = 0; i < spawnsToEnable; i++) 
+        int spawnsToEnable = (int)(pickupSpawns.Count * mapGenerator.pickupDensity);
+
+        for (int i = 0; i < spawnsToEnable; i++)
         {
             //Get a random spawn Index
             int ranSpawn = Random.Range(0, pickupSpawns.Count);
-            
+
             //while the random spawn is already active
-            while (pickupSpawns[ranSpawn].isActive) {
+            while (pickupSpawns[ranSpawn].isActive)
+            {
                 // find a new random spawner
-                ranSpawn = Random.Range(0, pickupSpawns.Count); 
+                ranSpawn = Random.Range(0, pickupSpawns.Count);
             }
             //set the spawner as active
             pickupSpawns[ranSpawn].SetActive(true);
         }
     }
     //--- SPAWNING AIs ---
+    //Function that procedurally generates enemies
+    private void GenerateEnemies()
+    {
+        int AISpawnAmount = (int)(pawnSpawns.Count * mapGenerator.enemyDensity); //get's the amount of spawns should have enemy from the desity percentages
+
+        //Spawn the needed amount of enemies
+        for (int i = 0; i < AISpawnAmount; i++)
+        {
+            //Make sure we fill in the required enemies first
+            if (i < mapGenerator.RequiredAI.Count)
+            {
+                SpawnEnemyOfType(mapGenerator.RequiredAI[i]); //Spawn the required enemy from the list.
+            }
+            else
+            {
+                int AI_ID = Random.Range(0, mapGenerator.listOfAIBehaviors.Count); //Get a random ID for AI controller the Map can generate
+                SpawnEnemyOfType(mapGenerator.listOfAIBehaviors[AI_ID]);           //Spawn that AI
+            }
+        }
+
+        int missingAISpawns = AISpawnAmount - mapGenerator.RequiredAI.Count;    //The amount of Required AIs missing after we spawn AIs
+
+        //SPAWNING THE REST OF THE REQUIRED AIs:
+        //Are there still required AIs needing spawned and is there's still space for new spawns?
+        if (missingAISpawns > 0 && missingAISpawns <= pawnSpawns.Count - AISpawnAmount)
+        {
+            int listJump = mapGenerator.RequiredAI.Count - missingAISpawns; //The jump we're making for compensation of the required AI's already spawned
+
+            Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
+
+            //spawning the required enemies starting from where the initial round of spawns left off.
+            for (int i = listJump; i > mapGenerator.RequiredAI.Count; i++)
+            {
+                SpawnEnemyOfType(mapGenerator.RequiredAI[i]); //Spawn the Required Enemy in the list from after the list Jump.
+            }
+        }
+    }
     //Specific AI Spawn
-    private void SpawnEnemyOfType(AIController behaviorType) 
+    private void SpawnEnemyOfType(AIController behaviorType)
     {
         PawnSpawner spawn = getRandPawnSpawn();
         switch (behaviorType)
         {
-            
+
             //PATROL
             case Patrol_AITank:
                 SpawnPatrolAI(spawn);
@@ -161,18 +240,19 @@ public class GameManager : MonoBehaviour
         behaviorType.currWayPoint = spawn.gameObject; //set the Spawnpoint as the Ai's current waypoint
     }
 
+    //==== AI SPAWNING ==== 
     //Basic AI Spawn
     public void SpawnBaseAI(PawnSpawner spawn)
     {
         GameObject pawn = Instantiate(AI_BasePrefab, spawn.transform) as GameObject; //Instantiates the Basic AI
     }
     //Patrolling AI Spawn
-    public void SpawnPatrolAI(PawnSpawner spawn) 
+    public void SpawnPatrolAI(PawnSpawner spawn)
     {
         GameObject pawn = Instantiate(AI_PatrollerPrefab, spawn.transform) as GameObject; //Instantiates the Patroller AI
         AIController AI_Controller = pawn.GetComponent<AIController>();                   //Get AI Controller
         WaypointScript waypoint = spawn.GetComponent<WaypointScript>();                   //Get the waypoint of the Spawn
-        
+
         //Set up AI_Controller's Waypoints:
         AI_Controller.wayPoints.Add(waypoint);
         AI_Controller.wayPoints.Add(waypoint.nextWaypoint);
@@ -189,7 +269,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject pawn = Instantiate(AI_TurretPrefab, spawn.transform) as GameObject; //Instantiates the Basic AI
     }
-    
+
     //Returns a random Pawn Spawner point in the world
     public PawnSpawner getRandPawnSpawn()
     {
