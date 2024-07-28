@@ -3,7 +3,9 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     public Pawn pawn;
+    public int score = 0;
 
+    //===|SCHEDULES|===
     private void Awake()
     {
         if (!pawn )
@@ -11,7 +13,6 @@ public abstract class Controller : MonoBehaviour
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
         }
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -19,7 +20,10 @@ public abstract class Controller : MonoBehaviour
         ProcessInputs();
     }
 
+    //===|ABSTRACTED FUNCTIONS|===
     public abstract void ProcessInputs();
+    
+    //===|FUNCTIONS|===
     public void SyncWithPawnDestroy() 
     {
        if (!pawn)
@@ -28,5 +32,10 @@ public abstract class Controller : MonoBehaviour
         }
   
     }
+    public void AddtoScore(int addedScore) 
+    { 
+        score += addedScore;
+    }
+
 }
 

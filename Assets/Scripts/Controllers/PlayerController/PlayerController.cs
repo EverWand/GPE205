@@ -10,8 +10,10 @@ public class PlayerController : Controller
     //ACTION KEYS
     public KeyCode Primary;
 
+    //COMPONENT REFERENCES
     public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
+//===|SCHEDULES|===
     // Start is called before the first frame update
     void Start()
     {
@@ -21,19 +23,19 @@ public class PlayerController : Controller
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
     }
-
     // Update is called once per frame
     void Update()
     {
         ProcessInputs();
     }
-
+    //When the controller gets destroyed
     private void OnDestroy()
     {
         //add player to the Game Managanger
         GameManager.instance.playerList.Remove(this);
     }
 
+//===|OVERRIDES|===
     public override void ProcessInputs()
     {
         //============| MOVEMENT |============
@@ -68,4 +70,5 @@ public class PlayerController : Controller
             noiseMaker.MakeNoise(noiseMaker.primaryFireVolume);
         }
     }
+
 }

@@ -517,7 +517,7 @@ MonoBehaviour:
   columns: 5
   roomWidth: 50
   roomHeight: 50
-  seedMode: 0
+  seedMode: 1
   seed: 10
   roomTiles:
   - {fileID: 121816, guid: 41d4243be8ad3a5409422171976de7ff, type: 3}
