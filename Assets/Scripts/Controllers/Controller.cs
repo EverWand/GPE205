@@ -3,7 +3,9 @@ using UnityEngine;
 public abstract class Controller : MonoBehaviour
 {
     public Pawn pawn;
+
     public int score = 0;
+    public int lives = 3;
 
     //===|SCHEDULES|===
     private void Awake()
@@ -40,5 +42,11 @@ public abstract class Controller : MonoBehaviour
     {
         score -= removedscore;
     }
+    public void AddLives(int amountAdded) 
+    {
+        lives += amountAdded;
+    }
+    public void RemoveLives(int amountRemoved) { 
+        lives -= amountRemoved;
+    }
 }
-

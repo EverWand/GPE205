@@ -17,7 +17,6 @@ public abstract class Pawn : MonoBehaviour
     {
         movementSpeed_Attack = movementSpeed / 2;
         mover = GetComponent<Mover>();        //Set mover reference by attatched component
-        controller = GetComponent<Controller>();
     }
 
     //===| PAWN KINEMATICS |===

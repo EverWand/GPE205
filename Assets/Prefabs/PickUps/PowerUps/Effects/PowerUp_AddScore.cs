@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,8 @@ public class PowerUp_AddScore : Powerup
     public int scoreToAdd;
     public override void ApplyEffect(Powerup_Manager target)
     {
-        Controller targetController = target.GetComponent<Controller>();
-
+        Controller targetController = target.GetComponent<Pawn>().controller;
+        Console.WriteLine("SCORE PICKUP OBTAINED BY: " + targetController.name + " FOR " + scoreToAdd);
         if (targetController)
         {
             targetController.AddToScore(scoreToAdd);
@@ -20,7 +21,7 @@ public class PowerUp_AddScore : Powerup
 
     public override void RemoveEffect(Powerup_Manager target)
     {
-        Controller targetController = target.GetComponent<Controller>();
+        Controller targetController = target.GetComponent<Pawn>().controller;
 
         if (targetController)
         {

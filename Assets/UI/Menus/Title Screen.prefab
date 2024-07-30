@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3987844085256961006}
   - component: {fileID: 7623053393567558176}
   - component: {fileID: 3596970374663692775}
+  - component: {fileID: 7393457079300078577}
   m_Layer: 5
   m_Name: StartBtn
   m_TagString: Untagged
@@ -120,7 +121,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7623053393567558176}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7393457079300078577}
+        m_TargetAssemblyTypeName: SwitchToGameplay, Assembly-CSharp
+        m_MethodName: TranstionToGameplay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7393457079300078577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135634123015781800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644af51807fbfd946880b15d2a2b616a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &573930340425077628
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,8 +536,9 @@ GameObject:
   - component: {fileID: 8139349587114160451}
   - component: {fileID: 2741156067263001487}
   - component: {fileID: 2992269630944633466}
+  - component: {fileID: 7443297447722214210}
   m_Layer: 5
-  m_Name: Button
+  m_Name: OptionsBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -619,7 +645,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2741156067263001487}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7443297447722214210}
+        m_TargetAssemblyTypeName: SwitchToOptions, Assembly-CSharp
+        m_MethodName: TranstionToOptions
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7443297447722214210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5374821254955878209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46cc06bdaf5eb3a459ed7e656db596c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6488394412438567634
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,8 +818,9 @@ GameObject:
   - component: {fileID: 9098331329236119615}
   - component: {fileID: 5837914614960849205}
   - component: {fileID: 418609863195989821}
+  - component: {fileID: 2507178874591092823}
   m_Layer: 5
-  m_Name: Button
+  m_Name: QuitBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -876,7 +927,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5837914614960849205}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2507178874591092823}
+        m_TargetAssemblyTypeName: QuitOption, Assembly-CSharp
+        m_MethodName: Quit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2507178874591092823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8218456939495695472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89ff401ba8257444f81f1c23d03bea3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9053936563022662961
 GameObject:
   m_ObjectHideFlags: 0

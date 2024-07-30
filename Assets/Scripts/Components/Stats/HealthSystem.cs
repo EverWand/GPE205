@@ -15,6 +15,7 @@ public class HealthSystem : MonoBehaviour
     public UnityEvent ReachedMaxHealth;    //Triggered when the Health reaches the Max [Not when the health is at max]
     public UnityEvent OnDamaged;           //Triggered when Damaged
     public UnityEvent OnUpdateHealth;      //Triggered whenever the Health is Updated
+    public UnityEvent OnDeath;             // Triggers when gameobject dies
 
     // Start is called before the first frame update
     void Start()
@@ -49,35 +50,51 @@ public class HealthSystem : MonoBehaviour
 
     public void TakeDamage(float amount, Pawn source = null) //Lose health by amount
     {
-        //Checks if Damages is not empty already
+        //Checks if Health is not empty already
         if (currHealth > 0) 
         {
             currHealth = Mathf.Clamp(currHealth - amount, 0, maxHealth); //subtract health to the current health, keeping it between 0 and its max health
             OnDamaged?.Invoke(); //invoke the Damaged Event
             OnUpdateHealth?.Invoke(); //invoke the Update Health Event
         }
-    }
 
-    //When there needs to check if the object is dead
-    public void CheckForDeath() 
-    {
-        //Die if at 0 health
         if (currHealth <= 0)
         {
-            Die(); //Run the Death Method
-        } 
+            Die(source); //Run the Death Method
+        }
     }
 
-    public void Die(Pawn source = null) //When the Object Dies
-    {
-        //checks if there's a source of dealth and if it has a controller
-        if (source && source.controller)
-        {
-            int addedScore = gameObject.GetComponent<Pawn>().scoreReward;
-            
-            source.controller.AddToScore(addedScore); 
-        }
+    //When the Object Dies
+    public void Die(Pawn source = null) 
+    { 
+        OnDeath?.Invoke(); //Signal death
         
-        Object.Destroy(gameObject); //Destroy the Owning Object
+        Pawn pawn = gameObject.GetComponent<Pawn>(); //This GameObject's Pawn
+
+        //checks if there's a source of death
+        if (source )
+        {
+            //Does the Source still have lives?
+            if (pawn.controller?.lives > 0)
+            {
+                //Add Score
+                int addedScore = gameObject.GetComponent<Pawn>().scoreReward;
+
+                source.controller.AddToScore(addedScore);   //Gain Score
+                pawn.controller.RemoveLives(1);           //remove a life from the 
+
+                //RESPAWN:
+                    //Spawn in new location
+                gameObject.transform.position = GameManager.instance.getRandPawnSpawn().transform.position; 
+                currHealth = maxHealth; //Reinitialize Health
+            }
+
+            //GAME OVER!
+            else
+            {
+                GameManager.instance.ActivateGameOverScreen();
+                Destroy(gameObject);    //Destroy the gameobject
+            }
+        }
     }
 }

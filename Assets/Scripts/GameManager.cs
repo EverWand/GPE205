@@ -128,6 +128,7 @@ public class GameManager : MonoBehaviour
         {
             SpawnPlayer(); //Spawn the Player into the Scene
         }
+
         SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
     }
     //Quits the Game
@@ -149,10 +150,12 @@ public class GameManager : MonoBehaviour
     private void SpawnPlayer()
     {
         //Player set-up References
-        GameObject Controller = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; //Make a Player controller into the scene
+        GameObject controller = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; //Make a Player controller into the scene
         playerCharacter = Instantiate(playerPrefab, getRandPawnSpawn().transform) as GameObject; //Make a Player Pawn into the scene
 
-        Controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
+
+        controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
+        playerCharacter.GetComponent<Pawn>().controller = controller.GetComponent<Controller>(); // Attach the player controller to the spawned pawn
     }
     //Enables certains spawns 
     private void EnablePickUpSpawners()
