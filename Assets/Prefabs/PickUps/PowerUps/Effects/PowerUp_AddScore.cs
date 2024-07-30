@@ -13,7 +13,7 @@ public class PowerUp_AddScore : Powerup
 
         if (targetController)
         {
-            targetController.score += scoreToAdd;
+            targetController.AddToScore(scoreToAdd);
         }
     }
 
@@ -24,7 +24,7 @@ public class PowerUp_AddScore : Powerup
 
         if (targetController)
         {
-            targetController.score -= scoreToAdd;
+            targetController.RemoveFromScore(scoreToAdd);
         }
     }
 }

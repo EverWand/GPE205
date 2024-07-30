@@ -32,10 +32,13 @@ public abstract class Controller : MonoBehaviour
         }
   
     }
-    public void AddtoScore(int addedScore) 
+    public void AddToScore(int addedScore) 
     { 
         score += addedScore;
     }
-
+    public void RemoveFromScore(int removedscore)
+    {
+        score -= removedscore;
+    }
 }
 

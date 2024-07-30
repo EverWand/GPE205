@@ -22,7 +22,7 @@ public class HealthSystem : MonoBehaviour
         currHealth = maxHealth; //Intialize current health to the set health
     }
 
-    public void Heal(float amount) //Heal health by amount
+    public void Heal(float amount, Pawn source = null) //Heal health by amount
     {
         bool atMax; //Boolean to track if the healt is initially at max
 
@@ -47,7 +47,7 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float amount) //Lose health by amount
+    public void TakeDamage(float amount, Pawn source = null) //Lose health by amount
     {
         //Checks if Damages is not empty already
         if (currHealth > 0) 
@@ -68,8 +68,16 @@ public class HealthSystem : MonoBehaviour
         } 
     }
 
-    public void Die() //When the Object Dies
+    public void Die(Pawn source = null) //When the Object Dies
     {
+        //checks if there's a source of dealth and if it has a controller
+        if (source && source.controller)
+        {
+            int addedScore = gameObject.GetComponent<Pawn>().scoreReward;
+            
+            source.controller.AddToScore(addedScore); 
+        }
+        
         Object.Destroy(gameObject); //Destroy the Owning Object
     }
 }

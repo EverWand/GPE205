@@ -7,14 +7,17 @@ public abstract class Pawn : MonoBehaviour
     public float movementSpeed;
     private float movementSpeed_Attack;
     public float turnSpeed;
+    public int scoreReward;
 
     public Mover mover;
+    public Controller controller;
 
     // Start is called before the first frame update
     public virtual void Start()
     {
         movementSpeed_Attack = movementSpeed / 2;
         mover = GetComponent<Mover>();        //Set mover reference by attatched component
+        controller = GetComponent<Controller>();
     }
 
     //===| PAWN KINEMATICS |===
