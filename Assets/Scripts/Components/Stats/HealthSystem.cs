@@ -71,30 +71,23 @@ public class HealthSystem : MonoBehaviour
         
         Pawn pawn = gameObject.GetComponent<Pawn>(); //This GameObject's Pawn
 
-        //checks if there's a source of death
-        if (source )
+        //Does the Source still have lives?
+        if (pawn.controller?.lives > 0)
         {
-            //Does the Source still have lives?
-            if (pawn.controller?.lives > 0)
-            {
-                //Add Score
-                int addedScore = gameObject.GetComponent<Pawn>().scoreReward;
+          //Add Score
+          int addedScore = gameObject.GetComponent<Pawn>().scoreReward;
 
-                source.controller.AddToScore(addedScore);   //Gain Score
-                pawn.controller.RemoveLives(1);           //remove a life from the 
+          pawn.controller.RemoveLives(1);           //remove a life from the 
 
-                //RESPAWN:
-                    //Spawn in new location
-                gameObject.transform.position = GameManager.instance.getRandPawnSpawn().transform.position; 
-                currHealth = maxHealth; //Reinitialize Health
-            }
-
-            //GAME OVER!
-            else
-            {
-                GameManager.instance.ActivateGameOverScreen();
-                Destroy(gameObject);    //Destroy the gameobject
-            }
+          //RESPAWN:
+          //Spawn in new location
+          gameObject.transform.position = GameManager.instance.getRandPawnSpawn().transform.position; 
+          currHealth = maxHealth; //Reinitialize Health
+        }
+        //GAME OVER!
+        else
+        {
+            Destroy(gameObject);    //Destroy the gameobject
         }
     }
 }

@@ -7,6 +7,16 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public static MapGenerator mapGenerator;
 
+    //Player References
+    public int PLAYER_MAX;  //The Maximum amount of players
+    [HideInInspector] public int numberOfPlayers = 1; //Decides how many players should be spawned {hidden from editor view}
+    
+    public GameObject player1ControllerPrefab;
+    public GameObject player2ControllerPrefab;
+    public GameObject playerPrefab;
+    public Transform playertransform;
+    private GameObject playerCharacter;
+
     //Game States
     public GameObject TitleScreenObject;
     public GameObject MainMenuScreenObject;
@@ -14,13 +24,6 @@ public class GameManager : MonoBehaviour
     public GameObject CreditsObject;
     public GameObject GameplayObject;
     public GameObject GameOverObject;
-
-    //Player References
-    public int numberOfPlayers = 1; //decides how many players there should be
-    public GameObject playerControllerPrefab;
-    public GameObject playerPrefab;
-    public Transform playertransform;
-    private GameObject playerCharacter;
 
     //====| GameObject Lists |====
     //---Players
@@ -60,6 +63,40 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ActivateTitleScreen();  //Start on the Title Screen
+    }
+
+    //Function for starting the Game
+    private void StartGame()
+    {
+        //Generate the Level
+        //---Creating the Map
+        mapGenerator = GetComponent<MapGenerator>();    //set the map generator
+        mapGenerator.GenerateMap();                     //Make the Map
+        //---Creating the Enemies
+        GenerateEnemies();
+        //---Enable the Spawners
+        EnablePickUpSpawners();
+
+        //for every players there are meant to be:
+        for (int id = 0; id < numberOfPlayers; id++)
+        {
+            SpawnPlayer(id); //Spawn the Player into the Scene
+        }
+
+        SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
+    }
+    //Quits the Game
+    public void QuitGame()
+    {
+        //RUN THIS IF A UNITY APPLICATION IS BEING RAN
+#if UNITY_STANDALONE
+        Application.Quit(); //Quit the Application
+#endif
+
+        //RUN THIS IF BEING RAN IN THE EDITOR
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;    //Exits Editor playtime
+#endif
     }
 
     //==== GAME STATES ==== 
@@ -111,46 +148,21 @@ public class GameManager : MonoBehaviour
         GameOverObject.SetActive(true);  //Activate Title Screen
     }
 
-    //Function for starting the Game
-    private void StartGame()
-    {
-        //Generate the Level
-        //---Creating the Map
-        mapGenerator = GetComponent<MapGenerator>();    //set the map generator
-        mapGenerator.GenerateMap();                     //Make the Map
-        //---Creating the Enemies
-        GenerateEnemies();
-        //---Enable the Spawners
-        EnablePickUpSpawners();
-
-        //for every players there are meant to be:
-        for (int id = 0; id < numberOfPlayers; id++)
-        {
-            SpawnPlayer(); //Spawn the Player into the Scene
-        }
-
-        SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
-    }
-    //Quits the Game
-    public void QuitGame()
-    {
-        //RUN THIS IF A UNITY APPLICATION IS BEING RAN
-#if UNITY_STANDALONE
-        Application.Quit(); //Quit the Application
-#endif
-
-        //RUN THIS IF BEING RAN IN THE EDITOR
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;    //Exits Editor playtime
-#endif
-    }
-
     //====| FUNCTIONS |====
     //instantiates the Player in the transform of the playerspawner
-    private void SpawnPlayer()
+    private void SpawnPlayer(int id)
     {
+
         //Player set-up References
-        GameObject controller = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; //Make a Player controller into the scene
+        GameObject controller;
+        //Assign Player 1
+        if (id < 1) {
+            controller = Instantiate(player1ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        }
+        //Assign Player 2
+        else { controller = Instantiate(player2ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; }
+        
+        //Make a Player controller into the scene
         playerCharacter = Instantiate(playerPrefab, getRandPawnSpawn().transform) as GameObject; //Make a Player Pawn into the scene
 
 

@@ -98,16 +98,7 @@ public class AIController : Controller
             case AIState.Guard:
                 DoGuardState(); //Gaurd current Post
 
-                //Can the AI hear the player?
-                if (CanHear(target))
-                {
-                    ChangeState(AIState.Scan); //Switch to Chase State
-                }
-                //Can directly See the target
-                if (CanSee(target))
-                {
-                    ChangeState(AIState.Chase); //chase the target
-                }
+                CheckForPlayer();
 
                 break;
             //In Chase State
@@ -136,16 +127,7 @@ public class AIController : Controller
             //In Patrol State
             case AIState.Patrol:
                 DoPatrol();
-                //Can the AI hear the player?
-                if (CanHear(target))
-                {
-                    ChangeState(AIState.Scan); //Switch to Chase State
-                }
-                //Can directly See the target
-                if (CanSee(target))
-                {
-                    ChangeState(AIState.Chase); //chase the target
-                }
+                CheckForPlayer();
 
                 break;
             //In Attack State
@@ -161,12 +143,7 @@ public class AIController : Controller
             //In Scan State
             case AIState.Scan:
                 DoScan(); //Scan the Environment
-                //Target is spotted?
-                if (CanSee(target))
-                {
-                    //Chase the Target
-                    ChangeState(AIState.Chase);
-                }
+                CheckForPlayer();
                 //Has it been enough time scanning?
                 if (hasTimePassed(ScanSpan))
                 {
@@ -178,13 +155,11 @@ public class AIController : Controller
             case AIState.BackToPost:
                 DoBackToPost();
 
-                if (CanSee(target)) { ChangeState(AIState.Chase); }
-                if (CanHear(target)) { ChangeState(AIState.Scan); }
+                CheckForPlayer();
                 if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
                 {
                     ChangeState(AIState.Guard);
                 }
-
                 break;
             //In Unknown State
             default:
@@ -199,6 +174,43 @@ public class AIController : Controller
         currState = newState;           //switch to the new state
         timeLastSwitched = Time.time;   //set this as the new time that this has  been last switched
         AttentionStartTime = 0;         //Reset AI's Attention
+    }
+
+    public void CheckForPlayer()
+    {
+        target = FindClosestPlayer();
+
+        if (target != null)
+        {
+            // Transition to chase state if player is within chase distance
+            if (Vector3.Distance(transform.position, target.transform.position) < chaseDistance)
+            {
+                ChangeState(AIState.Chase);
+            }
+            //Transition to scan state if player is heard
+            else if (CanHear(target))
+            {
+                ChangeState(AIState.Scan);
+            }
+        }
+    }
+
+    public GameObject FindClosestPlayer()
+    {
+        GameObject closestPlayer = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (PlayerController player in GameManager.instance.playerList)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < closestDistance)
+            {
+                closestPlayer = player.gameObject;
+                closestDistance = distance;
+            }
+        }
+
+        return closestPlayer;
     }
 
     //---Guards Action
