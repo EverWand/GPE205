@@ -10,11 +10,11 @@ public class Pickup : MonoBehaviour
     //ADD AND REMOVE PICKUPS IN THE WORLD INTO THE GAME MANAGER
     private void Awake()
     {
-        GameManager.instance.Pickups.Add(this);
+        GameManager.instance.mapGenerator.Pickups.Add(this);
     }
 
     private void OnDestroy()
     {
-        GameManager.instance.Pickups.Remove(this);
+        GameManager.instance.mapGenerator.Pickups.Remove(this);
     }
 }

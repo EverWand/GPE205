@@ -7,10 +7,10 @@ public class PawnSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        GameManager.instance.pawnSpawns.Add(this);
+        GameManager.instance.mapGenerator.pawnSpawns.Add(this);
     }
     private void OnDestroy()
     {
-        GameManager.instance.pawnSpawns.Remove(this);
+        GameManager.instance.mapGenerator.pawnSpawns.Remove(this);
     }
 }

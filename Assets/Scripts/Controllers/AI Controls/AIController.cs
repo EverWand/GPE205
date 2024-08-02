@@ -63,7 +63,7 @@ public class AIController : Controller
             currWayPoint = Instantiate(wayPointPrefab, pawn.transform.position, Quaternion.identity);
 
             // Add the waypoint to the needed lists
-            GameManager.instance.wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());
+            GameManager.instance.mapGenerator.wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());
             wayPoints.Add(currWayPoint.GetComponent<WaypointScript>());
 
             UpdatePost(currWaypointID);

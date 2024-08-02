@@ -10,10 +10,10 @@ public class WaypointScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.instance.wayPoints.Add(this); //add 
+        GameManager.instance.mapGenerator.wayPoints.Add(this); //add 
     }
     private void OnDestroy()
     {
-        GameManager.instance.wayPoints.Remove(this);
+        GameManager.instance.mapGenerator.wayPoints.Remove(this);
     }
 }

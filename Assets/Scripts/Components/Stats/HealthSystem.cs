@@ -81,7 +81,7 @@ public class HealthSystem : MonoBehaviour
 
           //RESPAWN:
           //Spawn in new location
-          gameObject.transform.position = GameManager.instance.getRandPawnSpawn().transform.position; 
+          gameObject.transform.position = GameManager.instance.mapGenerator.getRandPawnSpawn().transform.position; 
           currHealth = maxHealth; //Reinitialize Health
         }
         //GAME OVER!

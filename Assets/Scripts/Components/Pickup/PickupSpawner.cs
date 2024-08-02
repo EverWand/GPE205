@@ -14,11 +14,11 @@ public class PickupSpawner : MonoBehaviour
     //ADD|REMOVE from Game manager
     private void Awake()
     {
-        GameManager.instance.pickupSpawns.Add(this);
+        GameManager.instance.mapGenerator.pickupSpawns.Add(this);
     }
     private void OnDestroy()
     {
-        GameManager.instance.pickupSpawns.Remove(this);
+        GameManager.instance.mapGenerator.pickupSpawns.Remove(this);
     }
 
     // Start is called before the first frame update
