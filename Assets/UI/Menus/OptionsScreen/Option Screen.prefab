@@ -2703,6 +2703,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6241558388539868761}
+  - component: {fileID: 4093304406460482314}
   m_Layer: 0
   m_Name: Seed Setting
   m_TagString: Untagged
@@ -2726,6 +2727,20 @@ Transform:
   - {fileID: 4795352844607993585}
   m_Father: {fileID: 8537464151165286437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4093304406460482314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5315356359730925806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a892972c925fa0b418c4cb5e6db4e23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seedOption: {fileID: 5746763841332675154}
+  seedInput: {fileID: 5256756297126149070}
 --- !u!1 &5611319189788287054
 GameObject:
   m_ObjectHideFlags: 0
@@ -3997,7 +4012,7 @@ GameObject:
   - component: {fileID: 5675181394722261660}
   - component: {fileID: 5746763841332675154}
   m_Layer: 0
-  m_Name: Dropdown
+  m_Name: SeedTypeDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4143,7 +4158,7 @@ GameObject:
   - component: {fileID: 1805883712398507471}
   - component: {fileID: 5256756297126149070}
   m_Layer: 0
-  m_Name: InputField (TMP)
+  m_Name: SeedInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

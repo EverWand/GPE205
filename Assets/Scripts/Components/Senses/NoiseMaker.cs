@@ -24,7 +24,7 @@ public class NoiseMaker : MonoBehaviour
     {
         // Set noiseDistance to the given volume
         noiseDistance = noiseVolume;
-        
+
         // Start the NoiseTimer coroutine to reset noiseDistance after noiseTime
         StartCoroutine(NoiseTimer());
     }

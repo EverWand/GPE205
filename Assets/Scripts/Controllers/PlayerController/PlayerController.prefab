@@ -45,6 +45,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pawn: {fileID: 0}
+  score: 0
+  Score_Updated:
+    m_PersistentCalls:
+      m_Calls: []
+  Score_Added:
+    m_PersistentCalls:
+      m_Calls: []
+  Score_Removed:
+    m_PersistentCalls:
+      m_Calls: []
+  lives: 3
+  Lives_Updated:
+    m_PersistentCalls:
+      m_Calls: []
+  Life_Lost:
+    m_PersistentCalls:
+      m_Calls: []
+  Life_Gained:
+    m_PersistentCalls:
+      m_Calls: []
   MoveForward: 119
   MoveBackward: 115
   TurnLeft: 97

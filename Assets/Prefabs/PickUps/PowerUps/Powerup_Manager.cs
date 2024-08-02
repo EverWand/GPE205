@@ -11,8 +11,8 @@ public class Powerup_Manager : MonoBehaviour
 
     private void Start()
     {
-        powerupList = new List<Powerup>();
-        removedPowerupList = new List<Powerup>();
+        powerupList = new();
+        removedPowerupList = new();
     }
 
     private void Update()
@@ -37,16 +37,19 @@ public class Powerup_Manager : MonoBehaviour
         removedPowerupList.Add(powerup);    //puts in the removal queue
     }
 
-    public void DecrementPowerUpTimer() 
+    public void DecrementPowerUpTimer()
     {
-        //decrease each power up timer
-        foreach (Powerup powerup in powerupList)
+        if (powerupList.Count > 0) 
         {
-            powerup.duration -= Time.deltaTime;
-
-            if (powerup.duration <= 0 && !powerup.isPermanent)
+            //decrease each power up timer
+            foreach (Powerup powerup in powerupList)
             {
-                Remove(powerup);
+                powerup.duration -= Time.deltaTime;
+
+                if (powerup.duration <= 0 && !powerup.isPermanent)
+                {
+                    Remove(powerup);
+                }
             }
         }
     }

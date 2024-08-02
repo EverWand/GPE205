@@ -122,8 +122,25 @@ public class GameManager : MonoBehaviour
     //---GAME OVER
     public void ActivateGameOverScreen()
     {
-        DeactivateAllGameStates();          //reset all current game states
-        GameOverObject.SetActive(true);  //Activate Title Screen
+        int playersDead = 0;
+
+        //Check for how many players have died
+        foreach (PlayerController player in playerList)
+        {
+            //if player's lives have ran out
+            if (player.lives <= 0)
+            {
+                //count them as dead
+                playersDead++;
+            }
+        }
+
+        //If all players are dead
+        if (playersDead > PLAYER_MAX)
+        {
+            DeactivateAllGameStates();          //reset all current game states
+            GameOverObject.SetActive(true);  //Activate Title Screen
+        }
     }
 
     //====| FUNCTIONS |====

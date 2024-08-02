@@ -13,7 +13,11 @@ public class MapGenerator : MonoBehaviour
     public float roomHeight = 50f;
 
     //SEED
-    public enum SeedTypes { Preset, Random, Daily, Time }
+    public enum SeedTypes {
+        Preset,
+        Random, 
+        Daily, 
+        Time }
     public SeedTypes seedMode;
     public int seed;
 
@@ -223,7 +227,7 @@ public class MapGenerator : MonoBehaviour
         {
             int listJump = RequiredAI.Count - missingAISpawns; //The jump we're making for compensation of the required AI's already spawned
 
-            Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
+           //Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
 
             //spawning the required enemies starting from where the initial round of spawns left off.
             for (int i = listJump; i > RequiredAI.Count; i++)
