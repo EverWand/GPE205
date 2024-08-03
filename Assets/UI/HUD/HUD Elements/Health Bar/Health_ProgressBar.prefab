@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93ee7ddff5512f429c124da614013ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 0}
   ProgressBar_Updated:
     m_PersistentCalls:
       m_Calls: []

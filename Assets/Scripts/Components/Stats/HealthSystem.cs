@@ -20,8 +20,8 @@ public class HealthSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currHealth = maxHealth; //Intialize current health to the set health
-        OnUpdateHealth.Invoke();
+        currHealth = maxHealth;     // Intialize current health to the set health
+        OnUpdateHealth.Invoke();    // 
     }
 
     public void Heal(float amount, Pawn source = null) //Heal health by amount
