@@ -51,18 +51,20 @@ public class HealthSystem : MonoBehaviour
 
     public void TakeDamage(float amount, Pawn source = null) //Lose health by amount
     {
+
         //Checks if Health is not empty already
         if (currHealth > 0) 
         {
             currHealth = Mathf.Clamp(currHealth - amount, 0, maxHealth); //subtract health to the current health, keeping it between 0 and its max health
             OnDamaged?.Invoke(); //invoke the Damaged Event
-            OnUpdateHealth.Invoke(); //invoke the Update Health Event
+            OnUpdateHealth?.Invoke(); //invoke the Update Health Event
         }
 
         if (currHealth <= 0)
         {
             Die(source); //Run the Death Method
         }
+
     }
 
     //When the Object Dies

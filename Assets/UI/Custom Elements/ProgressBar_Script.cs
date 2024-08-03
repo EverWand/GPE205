@@ -12,18 +12,15 @@ public class ProgressBar_Script : MonoBehaviour
     //====| EVENTS |====
     public UnityEvent ProgressBar_Updated;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        slider = GetComponent<Slider>();    
-    }
-
-    //Sets the percent of the progress bar
+    // Sets the percent of the progress bar
     public void setPercent(float percent) 
     {
-        Mathf.Clamp01(percent); //Clamps between 0%-100%
+        percent = Mathf.Clamp01(percent); // Clamps between 0%-100%
         
-        Debug.Log(percent);
-        slider.value = percent;
+        Debug.Log($"Setting slider value to: {percent}");
+
+        slider.normalizedValue = percent;
+        
+        ProgressBar_Updated?.Invoke();
     }
 }

@@ -618,7 +618,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 119640369803448112}
   m_HandleRect: {fileID: 0}
@@ -642,9 +642,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93ee7ddff5512f429c124da614013ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 8765708171100264545}
   ProgressBar_Updated:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6254319993581303566}
+        m_TargetAssemblyTypeName: HealthBar, Assembly-CSharp
+        m_MethodName: updateDisplay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   hp: {fileID: 0}
 --- !u!1 &6237199174093863681
 GameObject:
