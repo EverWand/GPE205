@@ -16,11 +16,8 @@ public class ProgressBar_Script : MonoBehaviour
     public void setPercent(float percent) 
     {
         percent = Mathf.Clamp01(percent); // Clamps between 0%-100%
-        
-        Debug.Log($"Setting slider value to: {percent}");
-
-        slider.normalizedValue = percent;
-        
+        slider.value = percent;
+     
         ProgressBar_Updated?.Invoke();
     }
 }

@@ -1,11 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class GameManager : MonoBehaviour
 {
     //====| VARIABLES |====
     public static GameManager instance;
     public MapGenerator mapGenerator;
+    
+    [HideInInspector] public int highScore; //Saves the Game's Highscore
+    public event Action On_HighScore_Change;
 
     //Player References
     public int PLAYER_MAX;  //The Maximum amount of players
@@ -56,17 +61,22 @@ public class GameManager : MonoBehaviour
     //Function for starting the Game
     private void StartGame()
     {
-        if(mapGenerator != null) { 
+
+
+        if (mapGenerator != null) { 
             //Generate the Level
             mapGenerator.GenerateMap();
 
-            //for every players there are meant to be:
-            for (int id = 0; id < numberOfPlayers; id++)
+            if (playerPrefab != null)
             {
-                SpawnPlayer(id); //Spawn the Player into the Scene
+                //for every players there are meant to be:
+                for (int id = 0; id < numberOfPlayers; id++)
+                {
+                    SpawnPlayer(id); //Spawn the Player into the Scene
+                }
             }
-
             SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
+            On_HighScore_Change?.Invoke();   // invoke Highscore to initially update the display
         }
     }
     //Quits the Game
@@ -147,7 +157,6 @@ public class GameManager : MonoBehaviour
     //instantiates the Player in the transform of the playerspawner
     private void SpawnPlayer(int id)
     {
-
         //Player set-up References
         GameObject controller;
         //Assign Player 1
@@ -179,6 +188,17 @@ public class GameManager : MonoBehaviour
                 //Set it to the specific target
                 AI.target = target;
             }
+        }
+    }
+
+    //Checks if the given score is higher than the current highscore
+    public void SetHighScore(int score) 
+    {
+        //is the score being tested greater than the current highscore?
+        if(score > highScore) 
+        {
+            highScore = score;            //set the new highscore
+            On_HighScore_Change.Invoke(); //Signal the highscore has changed
         }
     }
 }

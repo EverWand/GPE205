@@ -1,24 +1,29 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class Controller : MonoBehaviour
 {
     public Pawn pawn;
-
+    
+    //SCORE VARIABLE
     public int score = 0;
-    public UnityEvent Score_Updated = new UnityEvent();
-    public UnityEvent Score_Added = new UnityEvent();
-    public UnityEvent Score_Removed = new UnityEvent();
+    //---Score Events
+    public event Action On_Score_Change;
+    public UnityEvent Score_Added;
+    public UnityEvent Score_Removed;
 
+    //LIVES VARIABLE
     public int lives = 3;
-    public UnityEvent Lives_Updated = new UnityEvent();
-    public UnityEvent Life_Lost = new UnityEvent();
-    public UnityEvent Life_Gained = new UnityEvent();
+    //---Score Events
+    public event Action On_Lives_Change;
+    public UnityEvent Life_Lost;
+    public UnityEvent Life_Gained;
 
     //===|SCHEDULES|===
     private void Awake()
     {
-        if (!pawn )
+        if (!pawn)
         {
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
         }
@@ -32,46 +37,62 @@ public abstract class Controller : MonoBehaviour
 
     //===|ABSTRACTED FUNCTIONS|===
     public abstract void ProcessInputs();
-    
+
     //===|FUNCTIONS|===
-    public void SyncWithPawnDestroy() 
+    //make sure the controller is destroyed if it its pawn is destroyed
+    public void SyncWithPawnDestroy()
     {
-       if (!pawn)
+        if (!pawn)
         {
             Destroy(gameObject);
         }
-  
+
     }
-    public void AddToScore(int addedScore) 
-    { 
+
+    //Invokes variables needed for UI
+    public void InvokeUiVariables() 
+    {
+        On_Lives_Change?.Invoke();
+        On_Score_Change?.Invoke();
+    }
+
+    //---SCORE
+    //Adds value to score
+    public void AddToScore(int addedScore)
+    {
         score += addedScore;
 
-        Score_Added.Invoke();
-        Score_Updated.Invoke();
+        Score_Added?.Invoke();
+        On_Score_Change?.Invoke();
     }
+    //Removes score by value
     public void RemoveFromScore(int removedscore)
     {
         score -= removedscore;
 
         Score_Removed.Invoke();
-        Score_Updated.Invoke();
+        On_Score_Change.Invoke();
     }
-    public void AddLives(int amountAdded) 
+    //---LIVES
+    //Add Lives by value
+    public void AddLives(int amountAdded)
     {
         lives += amountAdded;
 
-        Life_Gained.Invoke();
-        Lives_Updated.Invoke();
+        Life_Gained?.Invoke();
+        On_Lives_Change?.Invoke();
     }
-    public void RemoveLives(int amountRemoved) 
-    { 
+    //Removes lives by value
+    public void RemoveLives(int amountRemoved)
+    {
         lives -= amountRemoved;
 
-        Life_Lost.Invoke();
-        Lives_Updated.Invoke();
+        Life_Lost?.Invoke();
+        On_Lives_Change?.Invoke();
     }
 
-    public void handleLivesUpdate() 
+    //Tries to activate the Gameover state
+    public void CheckGameOver()
     {
         GameManager.instance.ActivateGameOverScreen();
     }

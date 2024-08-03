@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using System;
 
 public class PlayerController : Controller
 {
@@ -13,7 +15,6 @@ public class PlayerController : Controller
     //COMPONENT REFERENCES
     public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
-
     //===|SCHEDULES|===
     private void Start()
     {
@@ -22,6 +23,7 @@ public class PlayerController : Controller
 
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
+
     }
     // Update is called once per frame
     void Update()
@@ -77,5 +79,4 @@ public class PlayerController : Controller
     public int GetPlayerIndex() { 
        return GameManager.instance.playerList.IndexOf(this);
     }
-
 }

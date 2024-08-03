@@ -202,6 +202,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
+      propertyPath: rows
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: columns
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
       propertyPath: seedMode
       value: 1
       objectReference: {fileID: 0}
@@ -211,6 +221,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5505466909321833275, guid: fd1952920709eb14789259560286d19f,
         type: 3}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: pickupDensity
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
       propertyPath: AI_AfraidPrefab
@@ -697,13 +712,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 1738846984}
+  highScore: 0
   PLAYER_MAX: 2
   numberOfPlayers: 2
   player1ControllerPrefab: {fileID: 7469363259664066401, guid: 4eba7bb6d5a10b54e9ebb8aa9ff97293,
     type: 3}
   player2ControllerPrefab: {fileID: 7469363259664066401, guid: c0ee31c52449db644b727382fe23f1f8,
     type: 3}
-  playerPrefab: {fileID: 5955385537943791193, guid: 2f8982d7fc8789b49971659c7f72409e,
+  playerPrefab: {fileID: 5955385537943791193, guid: 460de765c470c5d48a6739f99f281066,
     type: 3}
   playertransform: {fileID: 0}
   TitleScreenObject: {fileID: 974139431}
