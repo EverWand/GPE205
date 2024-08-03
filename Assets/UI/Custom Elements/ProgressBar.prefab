@@ -297,6 +297,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab337acaee965d54da61a5d7a3e99952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProgressBar_Updated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7721163566576419488
 GameObject:
   m_ObjectHideFlags: 0

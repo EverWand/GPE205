@@ -21,6 +21,7 @@ public class HealthSystem : MonoBehaviour
     void Start()
     {
         currHealth = maxHealth; //Intialize current health to the set health
+        OnUpdateHealth.Invoke();
     }
 
     public void Heal(float amount, Pawn source = null) //Heal health by amount
@@ -34,7 +35,7 @@ public class HealthSystem : MonoBehaviour
             
             currHealth = Mathf.Clamp(currHealth + amount, 0, maxHealth); //add health to the current health, keeping it between 0 and its max health
             OnHealed?.Invoke(); //invoke the Damaged Event
-            OnUpdateHealth?.Invoke(); //invoke the Update Health Event
+            OnUpdateHealth.Invoke(); //invoke the Update Health Event
         }
         //Initially Maxed Out: No health Updates Happen
         else
@@ -55,7 +56,7 @@ public class HealthSystem : MonoBehaviour
         {
             currHealth = Mathf.Clamp(currHealth - amount, 0, maxHealth); //subtract health to the current health, keeping it between 0 and its max health
             OnDamaged?.Invoke(); //invoke the Damaged Event
-            OnUpdateHealth?.Invoke(); //invoke the Update Health Event
+            OnUpdateHealth.Invoke(); //invoke the Update Health Event
         }
 
         if (currHealth <= 0)
