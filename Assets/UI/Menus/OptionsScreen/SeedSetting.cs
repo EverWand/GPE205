@@ -13,10 +13,8 @@ public class SeedSetting : MonoBehaviour
     public TMP_Dropdown seedOption;
     public TMP_InputField seedInput;
 
-    private void Start()
-    {
-
-        
+    private void Awake()
+    {  
         if (seedInput != null)
         {
             seedInput.text = "0";
