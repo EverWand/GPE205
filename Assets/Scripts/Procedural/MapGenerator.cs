@@ -13,11 +13,13 @@ public class MapGenerator : MonoBehaviour
     public float roomHeight = 50f;
 
     //SEED
-    public enum SeedTypes {
+    public enum SeedTypes
+    {
         Preset,
-        Random, 
-        Daily, 
-        Time }
+        Random,
+        Daily,
+        Time
+    }
     public SeedTypes seedMode;
     public int seed;
 
@@ -162,6 +164,59 @@ public class MapGenerator : MonoBehaviour
         //---Enable the Spawners
         EnablePickUpSpawners();
     }
+    //Destroys the Map if one has been created
+    public void DestroyMap()
+    {
+
+        //====| CLEAN UP LOOSE GAMEOBJECT FROM MAP GENERATION |====
+
+        //Destroy Room Objects if they exist
+        if (grid != null && grid.Length > 0)
+        {
+            //go through every room in the map
+            foreach (var room in grid)
+            {
+                Destroy(room?.gameObject); //DESTROY THE ROOM!
+            }
+        }
+
+        //Destroy waypoints Objects if they exist
+        if (wayPoints != null && wayPoints.Count > 0)
+        {
+            //go through every waypoint in the map
+            foreach (var waypoint in wayPoints)
+            {
+                Destroy(waypoint?.gameObject); //DESTROY THE WAYPOINT!
+            }
+        }
+        //Destroy Pick ups Objects if they exist
+        if (Pickups != null && Pickups.Count > 0)
+        {
+            //go through every Pickup in the map
+            foreach (var pickup in Pickups)
+            {
+                Destroy(pickup?.gameObject);  //DESTROY THE PICKUP!
+            }
+        }
+
+        //Clean out the lists
+        ClearAllLists();
+    }
+
+    //Clean out the lists
+    private void ClearAllLists()
+    {
+        //Clear Map grid
+        grid = null;
+        //Clear Pickups
+        Pickups.Clear();
+        //Clear Pickup spawners
+        pickupSpawns.Clear();
+        //Clear Pawn spawners
+        pawnSpawns.Clear();
+        //Clear Waypoints
+        wayPoints.Clear();
+    }
 
     //sets the seed for the Map generator
     private void SetSeed(int newSeed)
@@ -227,7 +282,7 @@ public class MapGenerator : MonoBehaviour
         {
             int listJump = RequiredAI.Count - missingAISpawns; //The jump we're making for compensation of the required AI's already spawned
 
-           //Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
+            //Debug.Log("THE JUMP WE ARE TAKING!: " + listJump);  //DEBUG: Tracking the index we are jumping to in the required AI list.
 
             //spawning the required enemies starting from where the initial round of spawns left off.
             for (int i = listJump; i > RequiredAI.Count; i++)

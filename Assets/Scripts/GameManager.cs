@@ -62,6 +62,8 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
 
+        //MAKE SURE WE HAVE AN EMPTY SCENE TO MAKE A NEW MAP
+        mapGenerator?.DestroyMap();
 
         if (mapGenerator != null)
         {
@@ -98,7 +100,7 @@ public class GameManager : MonoBehaviour
     //Deactivates all Game States
     private void DeactivateAllGameStates()
     {
-        TitleScreenObject.SetActive(false);
+        TitleScreenObject?.SetActive(false);
 
         OptionsObject?.SetActive(false);
         CreditsObject?.SetActive(false);
@@ -133,8 +135,6 @@ public class GameManager : MonoBehaviour
     //---GAME OVER
     public void ActivateGameOverScreen()
     {
-
-
         //If all players are dead
         if (playerList == null || playerList.Count <= 0)
         {

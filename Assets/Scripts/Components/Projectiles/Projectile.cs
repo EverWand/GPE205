@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -20,10 +18,14 @@ public class Projectile : MonoBehaviour
         if (other.gameObject != shooter) //is the collider ran into not the object that shot the projectile?
         {
             HealthSystem health = other.GetComponent<HealthSystem>(); //get a health component from the collided object
-            
-            if (health != null)  //is the health component there?
+            Pawn source = shooter?.GetComponent<Pawn>();
+
+            //is the health component there?
+            if (health != null)
             {
-                health.TakeDamage(damage); //YES: have the collided object take damage
+                //Is there a pawn that is the source of the projectile?
+                if (source != null) { health.TakeDamage(damage, source); }  //Take Damage from that source
+                else { health.TakeDamage(damage); }                         //Take damage without a direct source
             }
 
             Destroy(gameObject); //destroy self

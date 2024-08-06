@@ -29,7 +29,6 @@ public class AIController : Controller
     public float maxSteerDistance;     //Maximum distance needed to steer
 
     private float AttentionStartTime; //Used to start when attention limits are needed
-    private float timeLastSwitched;    //Tracks the time it takes to transition into another state
     public GameObject target;          //Target the AI is attempting to sense
 
     public List<WaypointScript> wayPoints; //List of the AI's gaurd Posts
@@ -42,16 +41,12 @@ public class AIController : Controller
 
     private int directionSwitch = 1;            // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
 
-    private void Awake()
-    {
-        GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
-    }
 
     // Start is called before the first frame update
     void Start()
     {
         wayPoints ??= new List<WaypointScript>(); //Created a new list instance if it is originally null
-
+        pawn.controller = this;
 
         // Does the AI have any waypoints?
         if (wayPoints.Count <= 0)
@@ -71,8 +66,8 @@ public class AIController : Controller
         // There are waypoints
         else
         {
-            UpdatePost(currWaypointID);
-            ChangeState(AIState.Patrol); // Default to Patrol State
+            UpdatePost(currWaypointID);     // update to next waypoint+
+            ChangeState(AIState.Patrol);    // Default to Patrol State
         }
     }
 
@@ -80,6 +75,12 @@ public class AIController : Controller
     private void OnDestroy()
     {
         GameManager.instance.AIControllerList.Remove(this); //Remove this controller to the Game Manager AI Controller List
+    }
+
+    //====| OVERRIDE FUNCTIONS |====
+    public override void addToManager()
+    {
+        GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
     }
 
     //Overridding function to process the different inputs of the contoller (AKA: The FSM)
@@ -172,7 +173,6 @@ public class AIController : Controller
     public virtual void ChangeState(AIState newState)
     {
         currState = newState;           //switch to the new state
-        timeLastSwitched = Time.time;   //set this as the new time that this has  been last switched
         AttentionStartTime = 0;         //Reset AI's Attention
     }
 

@@ -25,13 +25,16 @@ public abstract class Controller : MonoBehaviour
     //===|SCHEDULES|===
     private void Awake()
     {
+        addToManager();//Add the specific controller to the manager
+
         if (!pawn)
         {
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
         }
-        On_NoLives += Handle_NoLives;
 
+        On_NoLives += Handle_NoLives;   //Subscribe to No Lives event
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -39,7 +42,8 @@ public abstract class Controller : MonoBehaviour
     }
 
     //===|ABSTRACTED FUNCTIONS|===
-    public abstract void ProcessInputs();
+    public abstract void ProcessInputs(); //For input reading
+    public abstract void addToManager(); // to add the controller to the game manager
 
     //===|FUNCTIONS|===
 
@@ -79,22 +83,25 @@ public abstract class Controller : MonoBehaviour
     //Removes lives by value
     public void RemoveLives(int amountRemoved)
     {
-       lives -= amountRemoved;
-        
+        lives -= amountRemoved;
+        //Debug.Log("Losing a life for " + pawn.gameObject.name);
+
+
         //is lives below or is 0
         if (lives <= 0)
         {
             lives = 0;              //Make sure lives is 0
             On_NoLives?.Invoke();   //Signal if there's no lives left
-
         }
 
         Life_Lost?.Invoke();        //Signal that a life has been lost
         On_Lives_Change?.Invoke();  //signal that lives value changed
     }
 
-    private void Handle_NoLives ()
-    { 
+    private void Handle_NoLives()
+    {
+        //Debug.Log("Handling No Lives for " + pawn.gameObject.name);
+
         //Destroy both the Pawn and the controller
         Destroy(pawn.gameObject);
         Destroy(gameObject);

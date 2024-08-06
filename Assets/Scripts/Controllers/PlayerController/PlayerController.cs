@@ -13,12 +13,10 @@ public class PlayerController : Controller
     //COMPONENT REFERENCES
     public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
+
     //===|SCHEDULES|===
     private void Start()
     {
-        //add player to the Game Managanger
-        GameManager.instance.playerList.Add(this);
-
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
         //====| Event Subscriptions |====
@@ -72,6 +70,11 @@ public class PlayerController : Controller
             pawn.Primary();
             noiseMaker.MakeNoise(noiseMaker.primaryFireVolume);
         }
+    }
+    public override void addToManager()
+    {
+        //add player to the Game Managanger
+        GameManager.instance.playerList.Add(this);
     }
 
     //===|FUNCTION|===

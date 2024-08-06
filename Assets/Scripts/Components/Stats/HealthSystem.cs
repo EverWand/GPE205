@@ -64,7 +64,7 @@ public class HealthSystem : MonoBehaviour
 
         if (currHealth <= 0)
         {
-            if (source == null) { Die(source); } // Die when there's a source of death
+            if (source != null) { Die(source); } // Die when there's a source of death
             else { Die(); } //Still die without a specific source of death
         }
 
@@ -78,9 +78,13 @@ public class HealthSystem : MonoBehaviour
 
         Pawn pawn = GetComponent<Pawn>(); //This GameObject's Pawn
 
+        //Debug.Log(pawn.gameObject.name + " Has Died!");
+
         //====| DEATH PENALTY |====
         if (pawn != null)
         {
+            //Debug.Log(pawn.gameObject.name + " has a Pawn");
+
             //Is there a specific Source of death given?
             if (source != null)
             {
@@ -88,10 +92,13 @@ public class HealthSystem : MonoBehaviour
             }
 
             pawn.controller?.RemoveLives(1); //Remove a life from owner pawn
+            //Debug.Log("CONTROLLER: " + pawn.controller.name);
 
             //Does the Pawn still have lives?
             if (pawn.controller?.lives > 0)
             {
+                //Debug.Log("Respawning " + pawn.gameObject.name);
+                
                 //===| RESPAWN |===
                 //Spawn in new location
                 gameObject.transform.position = GameManager.instance.mapGenerator.getRandPawnSpawn().transform.position;

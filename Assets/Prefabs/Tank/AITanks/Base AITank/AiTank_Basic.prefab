@@ -53,7 +53,7 @@ MonoBehaviour:
   Score_Removed:
     m_PersistentCalls:
       m_Calls: []
-  lives: 3
+  lives: 1
   Life_Lost:
     m_PersistentCalls:
       m_Calls: []
@@ -312,6 +312,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4687852938474560046}
     m_Modifications:
+    - target: {fileID: 2811184727621318690, guid: 2f8982d7fc8789b49971659c7f72409e,
+        type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2811184727621318690, guid: 2f8982d7fc8789b49971659c7f72409e,
         type: 3}
       propertyPath: scoreReward

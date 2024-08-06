@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
 using TMPro;
-using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerHUDScript : MonoBehaviour
@@ -10,12 +6,11 @@ public class PlayerHUDScript : MonoBehaviour
     //Controller reference
     public Pawn Pawn;
     Controller controller;
-    
+
     //Text Elements
     public GameObject scoreDisplayObj;
-    public GameObject highScoreDisplayObj;
     public GameObject livesDisplayObj;
-    
+
     //TMP
     [HideInInspector] public TextMeshProUGUI scoreDisplay;
     [HideInInspector] public TextMeshProUGUI livesDisplay;
@@ -41,7 +36,7 @@ public class PlayerHUDScript : MonoBehaviour
         FullHUDUpdate();
     }
 
-    public void FullHUDUpdate() 
+    public void FullHUDUpdate()
     {
         UpdateLivesDisplay();
         UpdateScoreDisplay();

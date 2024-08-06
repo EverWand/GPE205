@@ -160,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 8
   turnSpeed: 100
-  scoreReward: 0
+  scoreReward: 10
   mover: {fileID: 4642249275514516373}
   controller: {fileID: 0}
 --- !u!114 &4642249275514516373
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2160330d57d156a45b46551204a56804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 100
   currHealth: 0
   OnHealed:
     m_PersistentCalls:
@@ -213,9 +213,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &8589591019766642544
 MonoBehaviour:
   m_ObjectHideFlags: 0

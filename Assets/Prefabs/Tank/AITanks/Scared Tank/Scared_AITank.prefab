@@ -53,7 +53,7 @@ MonoBehaviour:
   Score_Removed:
     m_PersistentCalls:
       m_Calls: []
-  lives: 3
+  lives: 1
   Life_Lost:
     m_PersistentCalls:
       m_Calls: []
