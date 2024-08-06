@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Pawn : MonoBehaviour
@@ -18,7 +16,10 @@ public abstract class Pawn : MonoBehaviour
         movementSpeed_Attack = movementSpeed / 2;
         mover = GetComponent<Mover>();        //Set mover reference by attatched component
     }
-
+    private void OnDestroy()
+    {
+        mover = null;
+    }
     //===| PAWN KINEMATICS |===
     public abstract void MoveForward(float speed);
     public abstract void MoveBackwards(float speed);
@@ -29,4 +30,9 @@ public abstract class Pawn : MonoBehaviour
     //===| PAWN ACTIONS|===
     public abstract void Primary();
 
+    //Gives another controller this pawn's score reward
+    public void DealScoreReward(Controller controllerDealt)
+    {
+        controllerDealt.AddToScore(scoreReward);   //Add to the score of the source
+    }
 }

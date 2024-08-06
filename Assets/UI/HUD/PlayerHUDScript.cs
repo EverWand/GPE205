@@ -18,7 +18,6 @@ public class PlayerHUDScript : MonoBehaviour
     
     //TMP
     [HideInInspector] public TextMeshProUGUI scoreDisplay;
-    [HideInInspector] public TextMeshProUGUI highScoreDisplay;
     [HideInInspector] public TextMeshProUGUI livesDisplay;
 
 
@@ -29,7 +28,6 @@ public class PlayerHUDScript : MonoBehaviour
 
         //Set the TCM References
         scoreDisplay = scoreDisplayObj.GetComponent<TextMeshProUGUI>();
-        highScoreDisplay = highScoreDisplayObj.GetComponent<TextMeshProUGUI>();
         livesDisplay = livesDisplayObj.GetComponent<TextMeshProUGUI>();
 
         //Subscribe to the events
@@ -39,15 +37,12 @@ public class PlayerHUDScript : MonoBehaviour
             controller.On_Score_Change += UpdateScoreDisplay;   //Link Score Display
             controller.On_Lives_Change += UpdateLivesDisplay;   //Link Lives Display
         }
-        //---from Game Manager
-        GameManager.instance.On_HighScore_Change += UpdateHighScoreDisplay; //Link Highscore Display
 
         FullHUDUpdate();
     }
 
     public void FullHUDUpdate() 
     {
-        UpdateHighScoreDisplay();
         UpdateLivesDisplay();
         UpdateScoreDisplay();
     }
@@ -56,11 +51,6 @@ public class PlayerHUDScript : MonoBehaviour
     public void UpdateLivesDisplay()
     {
         livesDisplay.text = controller.lives.ToString(); //Sets the value of score to the text display
-    }
-    //HIGHSCORE DISPLAY
-    public void UpdateHighScoreDisplay()
-    {
-        highScoreDisplay.text = GameManager.instance.highScore.ToString(); //Sets the value of score to the text display
     }
     //SCORE DISPLAY
     public void UpdateScoreDisplay()

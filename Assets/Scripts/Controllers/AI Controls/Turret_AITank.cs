@@ -53,7 +53,7 @@ public class Turret_AITank : AIController
                     ChangeState(AIState.Attack);
                 }
                 //Has it been enough time scanning?
-                if (hasTimePassed(ScanSpan))
+                if (HasTimePassed(ScanSpan))
                 {
                     //Nobody there, go back to post | Must have been the wind
                     ChangeState(AIState.Guard);

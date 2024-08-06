@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class NoiseMaker : MonoBehaviour
@@ -27,5 +26,11 @@ public class NoiseMaker : MonoBehaviour
 
         // Start the NoiseTimer coroutine to reset noiseDistance after noiseTime
         StartCoroutine(NoiseTimer());
+
+    }
+
+    private void OnDestroy()
+    {
+        StopCoroutine(NoiseTimer());
     }
 }

@@ -116,7 +116,7 @@ public class AIController : Controller
                     ChangeState(AIState.Attack); //Attack the target
                 }
                 //Did the AI lose its target for a given amount of time?
-                if (!CanSee(target) && hasTimePassed(AttentionSpan))
+                if (!CanSee(target) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -135,7 +135,7 @@ public class AIController : Controller
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(target) && hasTimePassed(AttentionSpan))
+                if (!CanSee(target) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -145,7 +145,7 @@ public class AIController : Controller
                 DoScan(); //Scan the Environment
                 CheckForPlayer();
                 //Has it been enough time scanning?
-                if (hasTimePassed(ScanSpan))
+                if (HasTimePassed(ScanSpan))
                 {
                     //Nobody there, go back to post | Must have been the wind
                     ChangeState(AIState.BackToPost);
@@ -359,7 +359,7 @@ public class AIController : Controller
 
         return currHealthiest; //return the found healthiest AI
     }
-    public bool isHealthBelow(double percentage)
+    public bool IsHealthBelow(double percentage)
     {
         HealthSystem HP = pawn.GetComponent<HealthSystem>();
         if (HP != null)
@@ -402,7 +402,7 @@ public class AIController : Controller
         }
     }
     //Return if the the time in one state is over a given time limit
-    public bool hasTimePassed(float timeLimit)
+    public bool HasTimePassed(float timeLimit)
     {
         //if a negative number is set, Then there's no time limit | Never reaches the time limit
         if (timeLimit < 0)

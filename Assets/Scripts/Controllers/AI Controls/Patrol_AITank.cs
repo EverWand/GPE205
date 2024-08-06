@@ -1,9 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static AIController;
-using static UnityEngine.GraphicsBuffer;
-
 public class Patrol_AITank : AIController
 {
 
@@ -33,7 +27,8 @@ public class Patrol_AITank : AIController
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
-                if (hasTimePassed(PostSpan)){
+                if (HasTimePassed(PostSpan))
+                {
                     ChangeState(AIState.Patrol);
                 }
 
@@ -53,7 +48,7 @@ public class Patrol_AITank : AIController
                     ChangeState(AIState.Attack); //Attack the target
                 }
                 //Did the AI lose its target for a given amount of time?
-                if (!CanSee(target) && hasTimePassed(AttentionSpan))
+                if (!CanSee(target) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -79,7 +74,7 @@ public class Patrol_AITank : AIController
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(target) && hasTimePassed(AttentionSpan))
+                if (!CanSee(target) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -94,7 +89,7 @@ public class Patrol_AITank : AIController
                     ChangeState(AIState.Chase);
                 }
                 //Has it been enough time scanning?
-                if (hasTimePassed(ScanSpan))
+                if (HasTimePassed(ScanSpan))
                 {
                     //Nobody there, go back to post | Must have been the wind
                     ChangeState(AIState.BackToPost);

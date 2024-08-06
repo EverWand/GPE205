@@ -4,21 +4,23 @@ using UnityEngine.Events;
 
 public abstract class Controller : MonoBehaviour
 {
-    public Pawn pawn;
-    
+    public Pawn pawn;   //controller's Pawn
+
     //SCORE VARIABLE
-    public int score = 0;
+    public int score = 0;                   //value for score
     //---Score Events
-    public event Action On_Score_Change;
-    public UnityEvent Score_Added;
-    public UnityEvent Score_Removed;
+    public event Action On_Score_Change;    //Triggers When the Score Changed
+    public UnityEvent Score_Added;          //Triggers when score is added
+    public UnityEvent Score_Removed;        //Triggers when score is lost
 
     //LIVES VARIABLE
     public int lives = 3;
     //---Score Events
-    public event Action On_Lives_Change;
-    public UnityEvent Life_Lost;
-    public UnityEvent Life_Gained;
+    public event Action On_NoLives;         //Triggers when there are 0 lives left
+    public event Action On_Lives_Change;    //Triggers when lives value changes
+    public UnityEvent Life_Lost;            //Triggers when lives are lost
+    public UnityEvent Life_Gained;          //Triggers when lives are added
+
 
     //===|SCHEDULES|===
     private void Awake()
@@ -27,11 +29,12 @@ public abstract class Controller : MonoBehaviour
         {
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
         }
+        On_NoLives += Handle_NoLives;
+
     }
     // Update is called once per frame
     void Update()
     {
-        SyncWithPawnDestroy();
         ProcessInputs();
     }
 
@@ -39,18 +42,9 @@ public abstract class Controller : MonoBehaviour
     public abstract void ProcessInputs();
 
     //===|FUNCTIONS|===
-    //make sure the controller is destroyed if it its pawn is destroyed
-    public void SyncWithPawnDestroy()
-    {
-        if (!pawn)
-        {
-            Destroy(gameObject);
-        }
-
-    }
 
     //Invokes variables needed for UI
-    public void InvokeUiVariables() 
+    public void InvokeUiVariables()
     {
         On_Lives_Change?.Invoke();
         On_Score_Change?.Invoke();
@@ -77,23 +71,32 @@ public abstract class Controller : MonoBehaviour
     //Add Lives by value
     public void AddLives(int amountAdded)
     {
-        lives += amountAdded;
+        lives += amountAdded;   //increase lives value
 
-        Life_Gained?.Invoke();
-        On_Lives_Change?.Invoke();
+        Life_Gained?.Invoke();      //signal that lives has increased
+        On_Lives_Change?.Invoke();  //signal that lives has changed
     }
     //Removes lives by value
     public void RemoveLives(int amountRemoved)
     {
-        lives -= amountRemoved;
+       lives -= amountRemoved;
+        
+        //is lives below or is 0
+        if (lives <= 0)
+        {
+            lives = 0;              //Make sure lives is 0
+            On_NoLives?.Invoke();   //Signal if there's no lives left
 
-        Life_Lost?.Invoke();
-        On_Lives_Change?.Invoke();
+        }
+
+        Life_Lost?.Invoke();        //Signal that a life has been lost
+        On_Lives_Change?.Invoke();  //signal that lives value changed
     }
 
-    //Tries to activate the Gameover state
-    public void CheckGameOver()
-    {
-        GameManager.instance.ActivateGameOverScreen();
+    private void Handle_NoLives ()
+    { 
+        //Destroy both the Pawn and the controller
+        Destroy(pawn.gameObject);
+        Destroy(gameObject);
     }
 }

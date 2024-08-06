@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
-using System;
 
 public class PlayerController : Controller
 {
@@ -23,6 +21,8 @@ public class PlayerController : Controller
 
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
+        //====| Event Subscriptions |====
+        On_NoLives += CheckGameOver;    //Subscribe to the No Lives event
 
     }
     // Update is called once per frame
@@ -35,7 +35,7 @@ public class PlayerController : Controller
     {
         //add player to the Game Managanger
         GameManager.instance.playerList.Remove(this);
-
+        CheckGameOver();    //check if this causes a gameover
     }
 
     //===|OVERRIDES|===
@@ -76,7 +76,14 @@ public class PlayerController : Controller
 
     //===|FUNCTION|===
     //Gets the index that this controller is in
-    public int GetPlayerIndex() { 
-       return GameManager.instance.playerList.IndexOf(this);
+    public int GetPlayerIndex()
+    {
+        return GameManager.instance.playerList.IndexOf(this);
+    }
+
+    //Tries to activate the Gameover state
+    public void CheckGameOver()
+    {
+        GameManager.instance.ActivateGameOverScreen();
     }
 }

@@ -51,7 +51,7 @@ public class Scared_AITank : AIController
                     ChangeState(AIState.Attack); //Attack the target
                 }
                 //Did the AI lose its target for a given amount of time?
-                if (!CanSee(target) && hasTimePassed(AttentionSpan))
+                if (!CanSee(target) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -88,7 +88,7 @@ public class Scared_AITank : AIController
                     ChangeState(AIState.Scan); //Scan for Target
                 }
                 //Is Health Below half?
-                if (isHealthBelow(.50))
+                if (IsHealthBelow(.50))
                 {
                     ChangeState(AIState.Flee); //Run to a healthier tank
                 }
@@ -103,7 +103,7 @@ public class Scared_AITank : AIController
                     ChangeState(AIState.Chase);
                 }
                 //Has it been enough time scanning?
-                if (hasTimePassed(ScanSpan))
+                if (HasTimePassed(ScanSpan))
                 {
                     //Nobody there, go back to post | Must have been the wind
                     ChangeState(AIState.BackToPost);

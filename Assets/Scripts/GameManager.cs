@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     //====| VARIABLES |====
     public static GameManager instance;
     public MapGenerator mapGenerator;
-    
-    [HideInInspector] public int highScore; //Saves the Game's Highscore
+
+    [HideInInspector] public int highScore =100; //Saves the Game's Highscore
     public event Action On_HighScore_Change;
 
     //Player References
@@ -63,7 +63,8 @@ public class GameManager : MonoBehaviour
     {
 
 
-        if (mapGenerator != null) { 
+        if (mapGenerator != null)
+        {
             //Generate the Level
             mapGenerator.GenerateMap();
 
@@ -98,30 +99,30 @@ public class GameManager : MonoBehaviour
     private void DeactivateAllGameStates()
     {
         TitleScreenObject.SetActive(false);
-       
-        OptionsObject.SetActive(false);
-        CreditsObject.SetActive(false);
-        GameplayObject.SetActive(false);
-        GameOverObject.SetActive(false);
+
+        OptionsObject?.SetActive(false);
+        CreditsObject?.SetActive(false);
+        GameplayObject?.SetActive(false);
+        GameOverObject?.SetActive(false);
     }
 
     //---TITLE
     public void ActivateTitleScreen()
     {
         DeactivateAllGameStates();          //reset all current game states
-        TitleScreenObject.SetActive(true);  //Activate Title Screen
+        TitleScreenObject?.SetActive(true);  //Activate Title Screen
     }
     //---OPTIONS
     public void ActivateOptions()
     {
         DeactivateAllGameStates();          //reset all current game states
-        OptionsObject.SetActive(true);  //Activate Title Screen
+        OptionsObject?.SetActive(true);  //Activate Title Screen
     }
     //---CREDITS
     public void ActivateCredits()
     {
         DeactivateAllGameStates();          //reset all current game states
-        CreditsObject.SetActive(true);  //Activate Title Screen
+        CreditsObject?.SetActive(true);  //Activate Title Screen
     }
     //---GAMEPLAY
     public void ActivateGameplay()
@@ -132,24 +133,13 @@ public class GameManager : MonoBehaviour
     //---GAME OVER
     public void ActivateGameOverScreen()
     {
-        int playersDead = 0;
 
-        //Check for how many players have died
-        foreach (PlayerController player in playerList)
-        {
-            //if player's lives have ran out
-            if (player.lives <= 0)
-            {
-                //count them as dead
-                playersDead++;
-            }
-        }
 
         //If all players are dead
-        if (playersDead > PLAYER_MAX)
+        if (playerList == null || playerList.Count <= 0)
         {
-            DeactivateAllGameStates();          //reset all current game states
-            GameOverObject.SetActive(true);  //Activate Title Screen
+            DeactivateAllGameStates();       //reset all current game states
+            GameOverObject?.SetActive(true);  //Activate Title Screen
         }
     }
 
@@ -192,10 +182,10 @@ public class GameManager : MonoBehaviour
     }
 
     //Checks if the given score is higher than the current highscore
-    public void SetHighScore(int score) 
+    public void SetHighScore(int score)
     {
         //is the score being tested greater than the current highscore?
-        if(score > highScore) 
+        if (score > highScore)
         {
             highScore = score;            //set the new highscore
             On_HighScore_Change.Invoke(); //Signal the highscore has changed

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 public class Powerup_Manager : MonoBehaviour
@@ -17,13 +15,16 @@ public class Powerup_Manager : MonoBehaviour
 
     private void Update()
     {
+        //Count down powerup timers
         DecrementPowerUpTimer();
     }
 
     private void LateUpdate()
     {
+        //Apply powerup effects
         ApplyRemovalPowerUpQueue();
     }
+    //Add a new Powerup
     public void Add(Powerup powerup)
     {
         //POWERUP ADD TO MANAGER
@@ -31,24 +32,33 @@ public class Powerup_Manager : MonoBehaviour
         powerupList.Add(powerup);
     }
     //Remove a powerup
-    public void Remove(Powerup powerup) 
+    public void Remove(Powerup powerup)
     {
-        powerup.RemoveEffect(this); //Remove effect of the power up
-        removedPowerupList.Add(powerup);    //puts in the removal queue
+        if (powerup != null)
+        {
+            powerup.RemoveEffect(this); //Remove effect of the power up
+            removedPowerupList.Add(powerup);    //puts in the removal queue
+        }
     }
-
+    //Counts down the timer of each powerup collected
     public void DecrementPowerUpTimer()
     {
-        if (powerupList.Count > 0) 
+        //are there power ups?
+        if (powerupList != null && powerupList.Count > 0)
         {
             //decrease each power up timer
             foreach (Powerup powerup in powerupList)
             {
-                powerup.duration -= Time.deltaTime;
-
-                if (powerup.duration <= 0 && !powerup.isPermanent)
+                //found a powerup reference?
+                if (powerup != null)
                 {
-                    Remove(powerup);
+                    powerup.duration -= Time.deltaTime; //Lose time on the powerup's timer
+
+                    //Is the time depleted and it's not a permanent effect?
+                    if (powerup.duration <= 0 && !powerup.isPermanent)
+                    {
+                        Remove(powerup);    //remove the power up
+                    }
                 }
             }
         }
@@ -56,12 +66,19 @@ public class Powerup_Manager : MonoBehaviour
 
     private void ApplyRemovalPowerUpQueue()
     {
-        foreach(Powerup powerup in removedPowerupList)
+        foreach (Powerup powerup in removedPowerupList)
         {
-            powerupList.Remove(powerup);
+            //found a powerup reference?
+            if (powerup != null)
+            {
+                powerupList.Remove(powerup);
+            }
         }
-
-        removedPowerupList.Clear();
+        //Is there powerups in the removal queue?
+        if (removedPowerupList != null && removedPowerupList.Count > 0)
+        {
+            removedPowerupList.Clear(); //Clear the Powerups
+        }
     }
 }
 
