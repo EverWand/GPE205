@@ -11,6 +11,9 @@ public class PawnSpawner : MonoBehaviour
     }
     private void OnDestroy()
     {
-        GameManager.instance.mapGenerator.pawnSpawns.Remove(this);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.mapGenerator.pawnSpawns.Remove(this);
+        }
     }
 }

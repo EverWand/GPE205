@@ -8,8 +8,8 @@ public class Turret_AITank : AIController
 {
     public override void ProcessInputs()
     {
-        //Is there a target to interact with?
-        if (targets == null || !pawn)
+        //Is there a targets to interact with?
+        if (CollectTargets(null, targetList).Count <= 0 || targetList == null || !pawn)
         {
             return;
         }
@@ -22,12 +22,12 @@ public class Turret_AITank : AIController
                 DoGuardState(); //Gaurd current Post
 
                 //Can the AI hear the player?
-                if (CanHear(null, targets))
+                if (CanHear(null, targetList))
                 {
                     ChangeState(AIState.Scan); //Switch to Chase State
                 }
                 //Can directly See the target
-                if (CanSee(null, targets))
+                if (CanSee(null, targetList))
                 {
                     ChangeState(AIState.Attack); //chase the target
                 }
@@ -38,7 +38,7 @@ public class Turret_AITank : AIController
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(null, targets))
+                if (!CanSee(null, targetList))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -47,7 +47,7 @@ public class Turret_AITank : AIController
             case AIState.Scan:
                 DoScan(); //Scan the Environment
                 //Target is spotted?
-                if (CanSee(null, targets))
+                if (CanSee(null, targetList))
                 {
                     //Chase the Target
                     ChangeState(AIState.Attack);

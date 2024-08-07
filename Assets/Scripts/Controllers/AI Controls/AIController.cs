@@ -29,9 +29,9 @@ public class AIController : Controller
     public float maxSteerDistance;     //Maximum distance needed to steer
 
     private float AttentionStartTime;   //Used to start when attention limits are needed
-    public List<GameObject> targets;    //Targets the AI is attempting to sense
+    public List<GameObject> targetList = new List<GameObject>();    //Targets the AI is attempting to sense
 
-    public List<WaypointScript> wayPoints; //List of the AI's gaurd Posts
+    public List<WaypointScript> wayPoints = new(); //List of the AI's gaurd Posts
 
 
     [HideInInspector] public int currWaypointID = 0;              //current WaypointID
@@ -41,12 +41,12 @@ public class AIController : Controller
 
     private int directionSwitch = 1;            // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
 
-
+    //====| SCHEDULES |====
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.instance.AIControllerList.Add(this);
-        wayPoints ??= new List<WaypointScript>(); //Created a new list instance if it is originally null
+        Debug.Log("AI CONTROLLER STARTING!!!");
+
         pawn.controller = this;
 
         // Does the AI have any waypoints?
@@ -70,17 +70,26 @@ public class AIController : Controller
             UpdatePost(currWaypointID);     // update to next waypoint+
             ChangeState(AIState.Patrol);    // Default to Patrol State
         }
+
+
+        Debug.Log(this.gameObject.name + "grabbing default targets");
+        targetList = GameManager.instance.DefaultAITargets;
+        
     }
 
     //When the controller is destroyed
     private void OnDestroy()
     {
-        GameManager.instance.AIControllerList.Remove(this); //Remove this controller to the Game Manager AI Controller List
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.AIControllerList.Remove(this); //Remove this controller to the Game Manager AI Controller List
+        }
     }
 
     //====| OVERRIDE FUNCTIONS |====
     public override void addToManager()
     {
+        Debug.Log("--- AI Controller Added to Manager");
         GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
     }
 
@@ -89,7 +98,7 @@ public class AIController : Controller
     {
 
         //Is there a targets to interact with?
-        if (CollectTargets(null, targets).Count <= 0 || !pawn)
+        if (CollectTargets(null, targetList).Count <= 0 || targetList == null || !pawn)
         {
             return;
         }
@@ -109,17 +118,17 @@ public class AIController : Controller
                 DoChase(); //Chase the Target
 
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(chaseDistance, null, targets))
+                if (!IsDistanceLessThan(chaseDistance, null, targetList))
                 {
                     ChangeState(AIState.BackToPost); //go back to guard state
                 }
                 //is the targets lined up and within attacking range?
-                if (CanSee(null, targets) && IsDistanceLessThan(chaseDistance, null, targets))
+                if (CanSee(null, targetList) && IsDistanceLessThan(chaseDistance, null, targetList))
                 {
                     ChangeState(AIState.Attack); //Attack the targets
                 }
                 //Did the AI lose its targets for a given amount of time?
-                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null, targetList) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -138,7 +147,7 @@ public class AIController : Controller
                 DoAttackState(); //Attack the targets
 
                 //lost sight of the Target
-                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null, targetList) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -180,7 +189,7 @@ public class AIController : Controller
 
     public void CheckForPlayer()
     {
-        if (targets != null)
+        if (targetList != null || targetList.Count > 0)
         {
             // Transition to chase state if player is within chase distance
             if (Vector3.Distance(transform.position, FindClosestPlayer().transform.position) < chaseDistance)
@@ -188,7 +197,7 @@ public class AIController : Controller
                 ChangeState(AIState.Chase);
             }
             //Transition to scan state if player is heard
-            else if (CanHear(null, targets))
+            else if (CanHear(null, targetList))
             {
                 ChangeState(AIState.Scan);
             }
@@ -222,8 +231,8 @@ public class AIController : Controller
     public void DoChase()
     {
         //Find the Targets
-        if (targets == null || targets.Count <= 0) return;
-        Seek(null, targets);
+        if (targetList == null || targetList.Count <= 0) return;
+        Seek(null, targetList);
     }
     //---Flee Action
     public void DoFlee()
@@ -267,7 +276,7 @@ public class AIController : Controller
     //---Attack Action
     public void DoAttackState()
     {
-        Seek(null, targets);
+        Seek(null, targetList);
         pawn.Primary();
     }
     //---Scanning Action
@@ -319,7 +328,7 @@ public class AIController : Controller
         //Get the Collider of the Game Object if it has one
         Collider obstacle = seenObject?.GetComponent<Collider>();
 
-        foreach (GameObject targetObject in targets)
+        foreach (GameObject targetObject in targetList)
         {
             //Is there a collider that's not the targets?
             if (obstacle && seenObject != targetObject)
@@ -380,13 +389,12 @@ public class AIController : Controller
     //Checks if there's an Obstacle in front of the agent
     public bool ShouldAvoidObstacle()
     {
-
         //Get GameObject Seen and it's collider
         GameObject seenObject = ShootRaycast(pawn.transform.forward, maxSteerDistance);
         Collider obstacle = seenObject?.GetComponent<Collider>();
 
 
-        foreach (GameObject targetObject in CollectTargets(null, targets))
+        foreach (GameObject targetObject in CollectTargets(null, targetList))
         {
             //are we seeing an obstacle [not including the targets]?
             if (obstacle != null && seenObject != targetObject)
@@ -443,20 +451,19 @@ public class AIController : Controller
     //Return wether the AI can Hear the targets
     public bool CanHear(GameObject target = null, List<GameObject> targets = null)
     {
-        //Concstruct a list of target Objects
-        List<GameObject> targetList = CollectTargets(target, targets);
+        if (targets == null || targets.Count <= 0) { return false; }
+
 
         //Iterate through each Target object within the target list
-        foreach (GameObject targetObject in targetList)
+        foreach (GameObject targetObject in CollectTargets(target, targets))
         {
             //Get Target's Noisemaker
             NoiseMaker noiseMaker = targetObject.GetComponent<NoiseMaker>();
 
             //===| HEARING PREREQUISITES |===
-            //Make sure the targets makes noise
-            if (noiseMaker == null) { return false; }
-            //Make sure the targets's noise has a volume
-            if (noiseMaker.noiseDistance <= 0) { return false; }
+            //Make sure the targets makes noise and it's in range
+            if (noiseMaker == null || noiseMaker.noiseDistance <= 0) { return false; }
+
 
             //===| HEARING TEST |===
             //Farthest distance the AI would be able to hear the targetted noise
@@ -470,9 +477,11 @@ public class AIController : Controller
         }
         return false;
     }
+
     //Return wether the AI can see the Target
     public bool CanSee(GameObject target, List<GameObject> targets)
     {
+        if (targets == null || targets.Count <= 0) { return false; }
         //Collect the specified targets
         List<GameObject> targetList = CollectTargets(target, targets);
         foreach (GameObject targetObject in targetList)
@@ -486,7 +495,10 @@ public class AIController : Controller
             if (angleToTarget < fieldOfView)
             {
                 //Do we get the targets within our veiw Raycasting?
-                if (ShootRaycast(agentToTargetVector, viewDistance) == targetObject) { return true; }
+                if (ShootRaycast(agentToTargetVector, viewDistance) == targetObject)
+                {
+                    return true;
+                }
 
                 return false; //Dont See the Target
             }
@@ -494,7 +506,7 @@ public class AIController : Controller
         return false; // Target is not within FOV
     }
 
-    private List<GameObject> CollectTargets(GameObject target = null, List<GameObject> targets = null)
+    public List<GameObject> CollectTargets(GameObject target = null, List<GameObject> targets = null)
     {
         List<GameObject> targetList = new();
 

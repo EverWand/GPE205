@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public MapGenerator mapGenerator;
 
-    [HideInInspector] public int highScore =100; //Saves the Game's Highscore
+    [HideInInspector] public int highScore = 100; //Saves the Game's Highscore
     public event Action On_HighScore_Change;
 
     //Player References
@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour
     //---AI
     //------Controllers
     public List<AIController> AIControllerList = new();
-
+    //------AI Default Targets
+    public List<GameObject> DefaultAITargets = new();
 
     //====| SCHEDULES |====
     private void Awake()
@@ -61,12 +62,13 @@ public class GameManager : MonoBehaviour
     //Function for starting the Game
     private void StartGame()
     {
-
-        //MAKE SURE WE HAVE AN EMPTY SCENE TO MAKE A NEW MAP
-        mapGenerator?.DestroyMap();
+        Debug.Log("============| GAME START STARTING |============");
 
         if (mapGenerator != null)
         {
+            //MAKE SURE WE HAVE AN EMPTY SCENE TO MAKE A NEW MAP
+            mapGenerator.DestroyMap();
+
             //Generate the Level
             mapGenerator.GenerateMap();
 
@@ -75,20 +77,16 @@ public class GameManager : MonoBehaviour
                 //for every players there are meant to be:
                 for (int id = 0; id < numberOfPlayers; id++)
                 {
+                    
                     SpawnPlayer(id); //Spawn the Player into the Scene
                 }
             }
 
-
-            //COLLECT ALL PLAYER OBJECTS
-            List<GameObject> playerObjects = new(); 
-            //Get each player Controller
-            foreach (PlayerController player in playerList) 
-            { 
-                playerObjects.Add(player.pawn.gameObject);  //add the player object to the list
+            foreach (PlayerController player in playerList)
+            {
+                DefaultAITargets.Add(player.pawn.gameObject);  //add the player object to the list
+                //Debug.Log(player.pawn.gameObject);
             }
-            //Set the list as AI's Default Target
-            SetDefaultAITarget(null, playerObjects); //set default AI Target to all AIs
 
             On_HighScore_Change?.Invoke();   // invoke Highscore to initially update the display
         }
@@ -158,6 +156,7 @@ public class GameManager : MonoBehaviour
     //instantiates the Player in the transform of the playerspawner
     private void SpawnPlayer(int id)
     {
+        Debug.Log("---Spawning Player: " + id);
         //Player set-up References
         GameObject controller;
         //Assign Player 1
@@ -174,34 +173,41 @@ public class GameManager : MonoBehaviour
 
         controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
         playerCharacter.GetComponent<Pawn>().controller = controller.GetComponent<Controller>(); // Attach the player controller to the spawned pawn
+
+        // Add the playerCharacter to playerList if needed
+        playerList.Add(controller.GetComponent<PlayerController>());
+
+        Debug.Log("---FINISHED: Spawning Player: " + id + "|| PAWN = " + playerList[id].pawn.name + "/ GAME OBJECT = " + playerList[id].pawn.gameObject);
     }
 
-    //Set the DeafaultAITargets to a specific target
-    private void SetDefaultAITarget(GameObject target = null, List<GameObject> targets = null)
+    // Set the Default AI Targets for all AI Controllers
+    private void SetDefaultAITargets()
     {
-        //CONTRUCT A LIST OF TARGETS:
-        List<GameObject> targetsList = new();
-        //Add a single target
-        if (target == null)
+        Debug.Log("SETTING DEFAULT TARGETS");
+
+        foreach (GameObject player in DefaultAITargets)
         {
-            targetsList.Add(target);
-        }
-        //Add multiple targets
-        if (targets != null) 
-        { 
-            targetsList.AddRange(targets);
+            Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
         }
 
+        AIController debugAiController = null;
 
-        //For every AI Controller Found...
-        foreach (AIController AI in AIControllerList)
+            //For Every AI that exists in the Game
+        foreach (AIController ai in AIControllerList)
         {
-            //And if that AIController doesn't have a target Set...
-            if (AI.targets == null)
+            if (ai.targetList == null)
             {
-                //Set it to the specific target
-                AI.targets = targetsList;
+                    ai.targetList = new List<GameObject>();
             }
+            
+            ai.targetList.AddRange(DefaultAITargets);
+            debugAiController = ai;
+        }
+        
+        //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
+        foreach (GameObject newObject in debugAiController.targetList) 
+        {
+            Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
         }
     }
 

@@ -77,6 +77,7 @@ public class MapGenerator : MonoBehaviour
     //Generates the Map
     public void GenerateMap()
     {
+        Debug.Log("======| MAP IS BEING GENERATED |=====");
         //Set the Seed based on given Seed Type:
         switch (seedMode)
         {
@@ -257,6 +258,7 @@ public class MapGenerator : MonoBehaviour
     //Function that procedurally generates enemies
     private void GenerateEnemies()
     {
+        //=====| Generating Enemies |=====
         int AISpawnAmount = (int)(pawnSpawns.Count * enemyDensity); //get's the amount of spawns should have enemy from the desity percentages
 
         //Spawn the needed amount of enemies
@@ -274,11 +276,11 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        int missingAISpawns = AISpawnAmount - RequiredAI.Count;    //The amount of Required AIs missing after we spawn AIs
+        int missingAISpawns = RequiredAI.Count - AISpawnAmount;    //The amount of Required AIs missing after we spawn AIs
 
         //SPAWNING THE REST OF THE REQUIRED AIs:
         //Are there still required AIs needing spawned and is there's still space for new spawns?
-        if (missingAISpawns > 0 && missingAISpawns <= pawnSpawns.Count - AISpawnAmount)
+        if (missingAISpawns > 0 /*&& missingAISpawns <= pawnSpawns.Count - AISpawnAmount*/)
         {
             int listJump = RequiredAI.Count - missingAISpawns; //The jump we're making for compensation of the required AI's already spawned
 
@@ -294,6 +296,7 @@ public class MapGenerator : MonoBehaviour
     //Specific AI Spawn
     private void SpawnEnemyOfType(AIController behaviorType)
     {
+        Debug.Log("---Spawning Enemy");
         PawnSpawner spawn = getRandPawnSpawn();
         switch (behaviorType)
         {
@@ -316,6 +319,9 @@ public class MapGenerator : MonoBehaviour
         }
 
         behaviorType.currWayPoint = spawn.gameObject; //set the Spawnpoint as the Ai's current waypoint
+        behaviorType.addToManager();
+
+        Debug.Log("---FINISHED: Spawning Enemy");
     }
 
     //==== AI SPAWNING ==== 

@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 727903012}
   - component: {fileID: 727903011}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: ScreenCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -729,6 +729,7 @@ MonoBehaviour:
   GameOverObject: {fileID: 654199389}
   playerList: []
   AIControllerList: []
+  DefaultAITargets: []
 --- !u!4 &1131575352
 Transform:
   m_ObjectHideFlags: 0

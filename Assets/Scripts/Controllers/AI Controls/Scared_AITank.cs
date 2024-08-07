@@ -1,19 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Scared_AITank : AIController
 {
     public float followDistance;
 
     public override void ProcessInputs()
     {
-        //Is there a target to interact with?
-        if (targets == null || !pawn)
+        //Is there a targets to interact with?
+        if (CollectTargets(null, targetList).Count <= 0 || targetList == null || !pawn)
         {
             return;
         }
-
         //FSM
         switch (currState)
         {
@@ -22,12 +17,12 @@ public class Scared_AITank : AIController
                 DoGuardState(); //Gaurd current Post
 
                 //Can the AI hear the player?
-                if (CanHear(null, targets))
+                if (CanHear(null, targetList))
                 {
                     ChangeState(AIState.Scan); //Switch to Chase State
                 }
                 //Can directly See the target
-                if (CanSee(null, targets))
+                if (CanSee(null, targetList))
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
@@ -36,22 +31,22 @@ public class Scared_AITank : AIController
             //In Chase State
             case AIState.Chase:
                 DoChase(); //Chase the Target
-                if (targets == null)
+                if (targetList == null)
                 {
                     ChangeState(AIState.Guard);
                 }
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(chaseDistance,null, targets))
+                if (!IsDistanceLessThan(chaseDistance, null, targetList))
                 {
                     ChangeState(AIState.Guard); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
-                if (CanSee(null, targets) && IsDistanceLessThan(attackRange, null, targets))
+                if (CanSee(null, targetList) && IsDistanceLessThan(attackRange, null, targetList))
                 {
                     ChangeState(AIState.Attack); //Attack the target
                 }
                 //Did the AI lose its target for a given amount of time?
-                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null, targetList) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -59,7 +54,7 @@ public class Scared_AITank : AIController
             //In Flee State
             case AIState.Flee:
                 DoFlee();
-                if(IsDistanceLessThan(followDistance, FindHealthiestAI().gameObject) && FindHealthiestAI() != this)
+                if (IsDistanceLessThan(followDistance, FindHealthiestAI().gameObject) && FindHealthiestAI() != this)
                 {
                     ChangeState(AIState.Scan);
                 } //If it's close enough to the ally
@@ -67,12 +62,12 @@ public class Scared_AITank : AIController
             //In Patrol State
             case AIState.Patrol:
                 //Can the AI hear the player?
-                if (CanHear(null, targets))
+                if (CanHear(null, targetList))
                 {
                     ChangeState(AIState.Scan); //Switch to Chase State
                 }
                 //Can directly See the target
-                if (CanSee(null, targets))
+                if (CanSee(null, targetList))
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
@@ -83,7 +78,7 @@ public class Scared_AITank : AIController
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(null, targets))
+                if (!CanSee(null, targetList))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -97,7 +92,7 @@ public class Scared_AITank : AIController
             case AIState.Scan:
                 DoScan(); //Scan the Environment
                 //Target is spotted?
-                if (CanSee(null, targets))
+                if (CanSee(null, targetList))
                 {
                     //Chase the Target
                     ChangeState(AIState.Chase);
@@ -113,8 +108,8 @@ public class Scared_AITank : AIController
             case AIState.BackToPost:
                 DoBackToPost();
 
-                if (CanSee(null, targets)) { ChangeState(AIState.Chase); }
-                if (CanHear(null, targets)) { ChangeState(AIState.Scan); }
+                if (CanSee(null, targetList)) { ChangeState(AIState.Chase); }
+                if (CanHear(null, targetList)) { ChangeState(AIState.Scan); }
 
                 break;
             //In Unknown State

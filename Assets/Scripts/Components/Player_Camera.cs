@@ -1,16 +1,15 @@
-using System;
 using UnityEngine;
 
 public class Player_Camera : MonoBehaviour
 {
-    Camera camera;
+    Camera P_Cam;
     PlayerController player;
 
     // Start is called before the first frame update
     void Start()
     {
         //Initialize references
-        camera = GetComponent<Camera>();             //Camera
+        P_Cam = GetComponent<Camera>();             //Camera
         Pawn pawn = GetComponentInParent<Pawn>();
 
         player = pawn.controller as PlayerController;  //Player controller
@@ -34,6 +33,7 @@ public class Player_Camera : MonoBehaviour
         //Debug.Log("y-pos of Player " + playerIndex + "cam is " + y);
 
         // Set the viewport rectangle for this player's camera
-        camera.rect = new Rect(x, y, 1f, viewportHeight);
+        P_Cam.rect = new Rect(x, y, 1f, viewportHeight);
+
     }
 }

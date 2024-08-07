@@ -13,10 +13,18 @@ public class PlayerController : Controller
     //COMPONENT REFERENCES
     public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
-
     //===|SCHEDULES|===
+
+    private void Awake()
+    {
+        Debug.Log("PLAYER CONTROLLER AWAKE!!!");
+
+        addToManager();
+    }
     private void Start()
     {
+        Debug.Log("PLAYER CONTROLLER STARTING!!!");
+
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
         //====| Event Subscriptions |====

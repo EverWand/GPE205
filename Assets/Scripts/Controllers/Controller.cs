@@ -25,8 +25,6 @@ public abstract class Controller : MonoBehaviour
     //===|SCHEDULES|===
     private void Awake()
     {
-        addToManager();//Add the specific controller to the manager
-
         if (!pawn)
         {
             Debug.LogWarning("No pawn added to " + gameObject.name + " Controller Component.");
