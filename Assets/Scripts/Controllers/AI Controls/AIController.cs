@@ -17,7 +17,7 @@ public class AIController : Controller
     public float viewDistance;          //The distance of which the AI can see
     //---Scanning
     public float ScanSpan;              //Time spent scanning {Leave Negative if you want infinite Scan time}
-    public float AttentionSpan;         //Time Spent trying to refind target if it's lost
+    public float AttentionSpan;         //Time Spent trying to refind targets if it's lost
     public float PostSpan;              //Time Spent at a Post before moving on
 
     //---ACTION VARIABLES---
@@ -28,16 +28,16 @@ public class AIController : Controller
     public float minSteerDistance;     //Distance for minimum steer strength
     public float maxSteerDistance;     //Maximum distance needed to steer
 
-    private float AttentionStartTime; //Used to start when attention limits are needed
-    public GameObject target;          //Target the AI is attempting to sense
+    private float AttentionStartTime;   //Used to start when attention limits are needed
+    public List<GameObject> targets;    //Targets the AI is attempting to sense
 
     public List<WaypointScript> wayPoints; //List of the AI's gaurd Posts
 
 
-    public int currWaypointID = 0;              //current WaypointID
+    [HideInInspector] public int currWaypointID = 0;              //current WaypointID
+    [HideInInspector] public WaypointScript currWayPointScript;   //the script of the current waypoint
+    [HideInInspector] public GameObject currWayPoint;             //the gameobject of the current waypoint
     public GameObject wayPointPrefab;           //the prefab of a waypoint
-    public GameObject currWayPoint;             //the gameobject of the current waypoint
-    public WaypointScript currWayPointScript;   //the script of the current waypoint
 
     private int directionSwitch = 1;            // 1: go through Waypoints forwards | -1: Go through waypoints Backwards
 
@@ -45,6 +45,7 @@ public class AIController : Controller
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.instance.AIControllerList.Add(this);
         wayPoints ??= new List<WaypointScript>(); //Created a new list instance if it is originally null
         pawn.controller = this;
 
@@ -86,8 +87,9 @@ public class AIController : Controller
     //Overridding function to process the different inputs of the contoller (AKA: The FSM)
     public override void ProcessInputs()
     {
-        //Is there a target to interact with?
-        if (!target || !pawn)
+
+        //Is there a targets to interact with?
+        if (CollectTargets(null, targets).Count <= 0 || !pawn)
         {
             return;
         }
@@ -107,17 +109,17 @@ public class AIController : Controller
                 DoChase(); //Chase the Target
 
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(target, chaseDistance))
+                if (!IsDistanceLessThan(chaseDistance, null, targets))
                 {
                     ChangeState(AIState.BackToPost); //go back to guard state
                 }
-                //is the target lined up and within attacking range?
-                if (CanSee(target) && IsDistanceLessThan(target, attackRange))
+                //is the targets lined up and within attacking range?
+                if (CanSee(null, targets) && IsDistanceLessThan(chaseDistance, null, targets))
                 {
-                    ChangeState(AIState.Attack); //Attack the target
+                    ChangeState(AIState.Attack); //Attack the targets
                 }
-                //Did the AI lose its target for a given amount of time?
-                if (!CanSee(target) && HasTimePassed(AttentionSpan))
+                //Did the AI lose its targets for a given amount of time?
+                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -133,10 +135,10 @@ public class AIController : Controller
                 break;
             //In Attack State
             case AIState.Attack:
-                DoAttackState(); //Attack the target
+                DoAttackState(); //Attack the targets
 
                 //lost sight of the Target
-                if (!CanSee(target) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -157,7 +159,7 @@ public class AIController : Controller
                 DoBackToPost();
 
                 CheckForPlayer();
-                if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+                if (IsDistanceLessThan(currWayPointScript.posThreshold, currWayPoint))
                 {
                     ChangeState(AIState.Guard);
                 }
@@ -178,17 +180,15 @@ public class AIController : Controller
 
     public void CheckForPlayer()
     {
-        target = FindClosestPlayer();
-
-        if (target != null)
+        if (targets != null)
         {
             // Transition to chase state if player is within chase distance
-            if (Vector3.Distance(transform.position, target.transform.position) < chaseDistance)
+            if (Vector3.Distance(transform.position, FindClosestPlayer().transform.position) < chaseDistance)
             {
                 ChangeState(AIState.Chase);
             }
             //Transition to scan state if player is heard
-            else if (CanHear(target))
+            else if (CanHear(null, targets))
             {
                 ChangeState(AIState.Scan);
             }
@@ -221,9 +221,9 @@ public class AIController : Controller
     //---Chase Action
     public void DoChase()
     {
-        //Find the Target
-        if (!target) return;
-        Seek(target);
+        //Find the Targets
+        if (targets == null || targets.Count <= 0) return;
+        Seek(null, targets);
     }
     //---Flee Action
     public void DoFlee()
@@ -252,7 +252,7 @@ public class AIController : Controller
         if (currWaypointID >= 0 && currWaypointID < wayPoints.Count)
         {
             Seek(currWayPoint);
-            if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+            if (IsDistanceLessThan(currWayPointScript.posThreshold, currWayPoint))
             {
                 currWaypointID += directionSwitch;
                 if (currWaypointID >= wayPoints.Count || currWaypointID < 0)
@@ -267,7 +267,7 @@ public class AIController : Controller
     //---Attack Action
     public void DoAttackState()
     {
-        Seek(target);
+        Seek(null, targets);
         pawn.Primary();
     }
     //---Scanning Action
@@ -282,11 +282,14 @@ public class AIController : Controller
     }
 
     //---ACTION FUNCTIONS---
-    //---Seeking out target
-    public void Seek(GameObject target) //Seek GameObject
+    //---Seeking out targets
+    public void Seek(GameObject target = null, List<GameObject> targets = null) //Seek GameObject
     {
-        //Look at the Game Objects Position
-        Seek(target.transform.position);
+        foreach (GameObject targetObject in CollectTargets(target, targets))
+        {
+            //Look at the Game Objects Position
+            Seek(targetObject.transform.position);
+        }
     }
     public void Seek(Vector3 targetPosition) //Seek Position
     {
@@ -298,7 +301,7 @@ public class AIController : Controller
             AvoidObstacles();
         }
 
-        //Go to target position
+        //Go to targets position
         else
         {
             //Look at the position
@@ -316,26 +319,29 @@ public class AIController : Controller
         //Get the Collider of the Game Object if it has one
         Collider obstacle = seenObject?.GetComponent<Collider>();
 
-        //Is there a collider that's not the target?
-        if (obstacle && seenObject != target)
+        foreach (GameObject targetObject in targets)
         {
-            float currDistance = Vector3.Distance(pawn.transform.position, obstacle.transform.position); // The Current Distance of the agent to the collider
-            float steeringAdjustPercent = 0; //varibale to set an adjustment to the turn speed
+            //Is there a collider that's not the targets?
+            if (obstacle && seenObject != targetObject)
+            {
+                float currDistance = Vector3.Distance(pawn.transform.position, obstacle.transform.position); // The Current Distance of the agent to the collider
+                float steeringAdjustPercent = 0; //varibale to set an adjustment to the turn speed
 
-            steeringAdjustPercent = Math.Clamp(currDistance / maxSteerDistance, 0, 1); // Set Steering distance 0% - 100% adjustment
+                steeringAdjustPercent = Math.Clamp(currDistance / maxSteerDistance, 0, 1); // Set Steering distance 0% - 100% adjustment
 
-            float steerSpeed = pawn.turnSpeed * steeringAdjustPercent; //the turning speed with modifier
+                float steerSpeed = pawn.turnSpeed * steeringAdjustPercent; //the turning speed with modifier
 
-            // Implement friction or deceleration when turning
-            float forwardSpeedAdjustment = Mathf.Lerp(pawn.movementSpeed, pawn.movementSpeed * 0.5f, steeringAdjustPercent); // Reduce speed during turns
+                // Implement friction or deceleration when turning
+                float forwardSpeedAdjustment = Mathf.Lerp(pawn.movementSpeed, pawn.movementSpeed * 0.5f, steeringAdjustPercent); // Reduce speed during turns
 
-            pawn.MoveForward(forwardSpeedAdjustment); // Move forward with adjusted speed
+                pawn.MoveForward(forwardSpeedAdjustment); // Move forward with adjusted speed
 
-            pawn.TurnClockwise(steerSpeed); //Rotate Clockwise with the AdjustedSpeed
-        }
-        else
-        {
-            pawn.MoveForward(pawn.movementSpeed);
+                pawn.TurnClockwise(steerSpeed); //Rotate Clockwise with the AdjustedSpeed
+            }
+            else
+            {
+                pawn.MoveForward(pawn.movementSpeed);
+            }
         }
     }
     //Helps find The Healthiest AI
@@ -374,32 +380,38 @@ public class AIController : Controller
     //Checks if there's an Obstacle in front of the agent
     public bool ShouldAvoidObstacle()
     {
+
         //Get GameObject Seen and it's collider
         GameObject seenObject = ShootRaycast(pawn.transform.forward, maxSteerDistance);
         Collider obstacle = seenObject?.GetComponent<Collider>();
 
-        //are we seeing an obstacle [not including the target]?
-        if (obstacle != null && seenObject != target)
-        {
-            return true;
-        }
 
+        foreach (GameObject targetObject in CollectTargets(null, targets))
+        {
+            //are we seeing an obstacle [not including the targets]?
+            if (obstacle != null && seenObject != targetObject)
+            {
+                return true;
+            }
+        }
         return false;
     }
-    //Returns wether the given target is within a certain distance
-    public bool IsDistanceLessThan(GameObject target, float distance)
+    //Returns wether the given targets is within a certain distance
+    public bool IsDistanceLessThan(float distance, GameObject target = null, List<GameObject> targets = null)
     {
-        //Checks if the target is within the distance given from the this pawn's postion.
-        if (Vector3.Distance(pawn.transform.position, target.transform.position) < distance)
+        //Go through each target
+        foreach (GameObject targetObject in CollectTargets())
         {
-            //Within Range
-            return true;
+
+            //Checks if the targets is within the distance given from the this pawn's postion.
+            if (Vector3.Distance(pawn.transform.position, targetObject.transform.position) < distance)
+            {
+                //Within Range
+                return true;
+            }
         }
-        else
-        {
-            //Out of Range
-            return false;
-        }
+
+        return false;  //No targets in range
     }
     //Return if the the time in one state is over a given time limit
     public bool HasTimePassed(float timeLimit)
@@ -428,49 +440,75 @@ public class AIController : Controller
         return false; //Time is still going
     }
     //---Check Senses
-    //Return wether the AI can Hear the target
-    public bool CanHear(GameObject target)
+    //Return wether the AI can Hear the targets
+    public bool CanHear(GameObject target = null, List<GameObject> targets = null)
     {
-        //Get Target's Noisemaker
-        NoiseMaker noiseMaker = target.GetComponent<NoiseMaker>();
+        //Concstruct a list of target Objects
+        List<GameObject> targetList = CollectTargets(target, targets);
 
-        //===| HEARING PREREQUISITES |===
-        //Make sure the target makes noise
-        if (noiseMaker == null) { return false; }
-        //Make sure the target's noise has a volume
-        if (noiseMaker.noiseDistance <= 0) { return false; }
-
-        //===| HEARING TEST |===
-        //Farthest distance the AI would be able to hear the targetted noise
-        float totalDistance = noiseMaker.noiseDistance + hearingDistance;
-
-        //Checks if the AI distance from the target is within the total hearing distance calculated
-        if (Vector3.Distance(pawn.transform.position, target.transform.position) <= totalDistance)
+        //Iterate through each Target object within the target list
+        foreach (GameObject targetObject in targetList)
         {
-            return true;
-        }
+            //Get Target's Noisemaker
+            NoiseMaker noiseMaker = targetObject.GetComponent<NoiseMaker>();
 
+            //===| HEARING PREREQUISITES |===
+            //Make sure the targets makes noise
+            if (noiseMaker == null) { return false; }
+            //Make sure the targets's noise has a volume
+            if (noiseMaker.noiseDistance <= 0) { return false; }
+
+            //===| HEARING TEST |===
+            //Farthest distance the AI would be able to hear the targetted noise
+            float totalDistance = noiseMaker.noiseDistance + hearingDistance;
+
+            //Checks if the AI distance from the targets is within the total hearing distance calculated
+            if (Vector3.Distance(pawn.transform.position, targetObject.transform.position) <= totalDistance)
+            {
+                return true;
+            }
+        }
         return false;
     }
     //Return wether the AI can see the Target
-    public bool CanSee(GameObject target)
+    public bool CanSee(GameObject target, List<GameObject> targets)
     {
-        //Get vector pointing to the target
-        Vector3 agentToTargetVector = target.transform.position - pawn.transform.position;
-        //Get the angle to the targeted vector from where the AI is looking forward
-        float angleToTarget = Vector3.Angle(agentToTargetVector, pawn.transform.forward);
-
-        //Is Target within FOV
-        if (angleToTarget < fieldOfView)
+        //Collect the specified targets
+        List<GameObject> targetList = CollectTargets(target, targets);
+        foreach (GameObject targetObject in targetList)
         {
-            //Do we get the target within our veiw Raycasting?
-            if (ShootRaycast(agentToTargetVector, viewDistance) == target) { return true; }
+            //Get vector pointing to the targets
+            Vector3 agentToTargetVector = targetObject.transform.position - pawn.transform.position;
+            //Get the angle to the targeted vector from where the AI is looking forward
+            float angleToTarget = Vector3.Angle(agentToTargetVector, pawn.transform.forward);
 
-            return false; //Dont See the Target
+            //Is Target within FOV
+            if (angleToTarget < fieldOfView)
+            {
+                //Do we get the targets within our veiw Raycasting?
+                if (ShootRaycast(agentToTargetVector, viewDistance) == targetObject) { return true; }
+
+                return false; //Dont See the Target
+            }
         }
-
         return false; // Target is not within FOV
     }
+
+    private List<GameObject> CollectTargets(GameObject target = null, List<GameObject> targets = null)
+    {
+        List<GameObject> targetList = new();
+
+        if (target != null)
+        {
+            targetList.Add(target);
+        }
+        if (targets != null)
+        {
+            targetList.AddRange(targets);
+        }
+        return targetList;
+    }
+
 
     //Get Position of current WayPoint
     public Vector3 GetPostPos()

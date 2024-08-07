@@ -78,7 +78,18 @@ public class GameManager : MonoBehaviour
                     SpawnPlayer(id); //Spawn the Player into the Scene
                 }
             }
-            SetDefaultAITarget(playerCharacter.gameObject); //set default AI Target to all AIs
+
+
+            //COLLECT ALL PLAYER OBJECTS
+            List<GameObject> playerObjects = new(); 
+            //Get each player Controller
+            foreach (PlayerController player in playerList) 
+            { 
+                playerObjects.Add(player.pawn.gameObject);  //add the player object to the list
+            }
+            //Set the list as AI's Default Target
+            SetDefaultAITarget(null, playerObjects); //set default AI Target to all AIs
+
             On_HighScore_Change?.Invoke();   // invoke Highscore to initially update the display
         }
     }
@@ -166,17 +177,30 @@ public class GameManager : MonoBehaviour
     }
 
     //Set the DeafaultAITargets to a specific target
-    private void SetDefaultAITarget(GameObject target)
+    private void SetDefaultAITarget(GameObject target = null, List<GameObject> targets = null)
     {
+        //CONTRUCT A LIST OF TARGETS:
+        List<GameObject> targetsList = new();
+        //Add a single target
+        if (target == null)
+        {
+            targetsList.Add(target);
+        }
+        //Add multiple targets
+        if (targets != null) 
+        { 
+            targetsList.AddRange(targets);
+        }
+
+
         //For every AI Controller Found...
         foreach (AIController AI in AIControllerList)
         {
-            //DEBUG: Debug.Log("Testing target of AI: " + AI.gameObject);
-            //and if that AIController doesn't have a target Set...
-            if (!AI.target)
+            //And if that AIController doesn't have a target Set...
+            if (AI.targets == null)
             {
                 //Set it to the specific target
-                AI.target = target;
+                AI.targets = targetsList;
             }
         }
     }

@@ -5,7 +5,7 @@ public class Patrol_AITank : AIController
     public override void ProcessInputs()
     {
         //Is there a target to interact with?
-        if (!target || !pawn)
+        if (targets == null || !pawn)
         {
             return;
         }
@@ -18,12 +18,12 @@ public class Patrol_AITank : AIController
                 DoGuardState(); //Gaurd current Post
 
                 //Can the AI hear the player?
-                if (CanHear(target))
+                if (CanHear(null, targets))
                 {
                     ChangeState(AIState.Scan); //Switch to Chase State
                 }
                 //Can directly See the target
-                if (CanSee(target))
+                if (CanSee(null, targets))
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
@@ -38,17 +38,17 @@ public class Patrol_AITank : AIController
                 DoChase(); //Chase the Target
 
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(target, chaseDistance))
+                if (!IsDistanceLessThan(chaseDistance, null, targets))
                 {
                     ChangeState(AIState.BackToPost); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
-                if (CanSee(target) && IsDistanceLessThan(target, attackRange))
+                if (CanSee(null, targets) && IsDistanceLessThan(attackRange, null, targets))
                 {
                     ChangeState(AIState.Attack); //Attack the target
                 }
                 //Did the AI lose its target for a given amount of time?
-                if (!CanSee(target) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null,targets) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan);
                 }
@@ -58,12 +58,12 @@ public class Patrol_AITank : AIController
                 DoPatrol();
 
                 //Can the AI hear the player?
-                if (CanHear(target))
+                if (CanHear(null, targets))
                 {
                     ChangeState(AIState.Scan); //Switch to Chase State
                 }
                 //Can directly See the target
-                if (CanSee(target))
+                if (CanSee(null, targets))
                 {
                     ChangeState(AIState.Chase); //chase the target
                 }
@@ -74,7 +74,7 @@ public class Patrol_AITank : AIController
                 DoAttackState(); //Attack the target
 
                 //lost sight of the Target
-                if (!CanSee(target) && HasTimePassed(AttentionSpan))
+                if (!CanSee(null, targets) && HasTimePassed(AttentionSpan))
                 {
                     ChangeState(AIState.Scan); //Scan for Target
                 }
@@ -83,7 +83,7 @@ public class Patrol_AITank : AIController
             case AIState.Scan:
                 DoScan(); //Scan the Environment
                 //Target is spotted?
-                if (CanSee(target))
+                if (CanSee(null, targets))
                 {
                     //Chase the Target
                     ChangeState(AIState.Chase);
@@ -99,9 +99,9 @@ public class Patrol_AITank : AIController
             case AIState.BackToPost:
                 DoBackToPost();
 
-                if (CanSee(target)) { ChangeState(AIState.Chase); }
-                if (CanHear(target)) { ChangeState(AIState.Scan); }
-                if (IsDistanceLessThan(currWayPoint, currWayPointScript.posThreshold))
+                if (CanSee(null, targets)) { ChangeState(AIState.Chase); }
+                if (CanHear(null, targets)) { ChangeState(AIState.Scan); }
+                if (IsDistanceLessThan(currWayPointScript.posThreshold, currWayPoint))
                 {
                     ChangeState(AIState.Guard);
                 }
