@@ -38,12 +38,12 @@ public class Patrol_AITank : AIController
                 DoChase(); //Chase the Target
 
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(chaseDistance, null, targetList))
+                if (!IsDistanceLessThan(chaseDistance,focusTarget))
                 {
                     ChangeState(AIState.BackToPost); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
-                if (CanSee(null, targetList) && IsDistanceLessThan(attackRange, null, targetList))
+                if (CanSee(null, targetList) && IsDistanceLessThan(attackRange, focusTarget))
                 {
                     ChangeState(AIState.Attack); //Attack the target
                 }
@@ -97,10 +97,13 @@ public class Patrol_AITank : AIController
                 break;
             //In Back to Post State
             case AIState.BackToPost:
+                //not focused on a target
+                focusTarget = null;
                 DoBackToPost();
 
                 if (CanSee(null, targetList)) { ChangeState(AIState.Chase); }
                 if (CanHear(null, targetList)) { ChangeState(AIState.Scan); }
+
                 if (IsDistanceLessThan(currWayPointScript.posThreshold, currWayPoint))
                 {
                     ChangeState(AIState.Guard);

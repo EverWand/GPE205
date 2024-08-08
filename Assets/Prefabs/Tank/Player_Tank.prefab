@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e3727a905da5f46b5753dd66c75a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 8
+  BaseMovementSpeed: 10
   turnSpeed: 100
   scoreReward: 10
   mover: {fileID: 4642249275514516373}

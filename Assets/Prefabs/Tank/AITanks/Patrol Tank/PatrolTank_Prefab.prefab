@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e3727a905da5f46b5753dd66c75a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 8
+  BaseMovementSpeed: 12
   turnSpeed: 150
   scoreReward: 50
   mover: {fileID: 2529117580432474321}
@@ -521,13 +521,13 @@ MonoBehaviour:
   attackRange: 10
   minSteerDistance: 0
   maxSteerDistance: 5
-  target: {fileID: 0}
+  targetList: []
   wayPoints: []
   currWaypointID: 0
+  currWayPointScript: {fileID: 0}
+  currWayPoint: {fileID: 0}
   wayPointPrefab: {fileID: 1785804161569491535, guid: c57171191d1c9754287f594fc3b19c87,
     type: 3}
-  currWayPoint: {fileID: 0}
-  currWayPointScript: {fileID: 0}
 --- !u!1 &7570834038031299338
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,8 @@ public class Tank_Pawn : Pawn
     public override void MoveForward(float speed) //Move the tank Forwards using rigid body
     {
         if (mover!=null) { 
-            mover.Move(transform.forward,speed);
+            mover.Move(transform.forward, speed);
+            Debug.Log(gameObject.name + " Moving with speed = " + speed + "|| Base Speed is = " + BaseMovementSpeed);
         }
         else{
             Debug.LogWarning("No Movement Component Attatched to Pawn.");

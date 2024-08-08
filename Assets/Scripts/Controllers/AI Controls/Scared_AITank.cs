@@ -36,12 +36,12 @@ public class Scared_AITank : AIController
                     ChangeState(AIState.Guard);
                 }
                 //Is the Target too far away?
-                if (!IsDistanceLessThan(chaseDistance, null, targetList))
+                if (!IsDistanceLessThan(chaseDistance, focusTarget))
                 {
                     ChangeState(AIState.Guard); //go back to guard state
                 }
                 //is the target lined up and within attacking range?
-                if (CanSee(null, targetList) && IsDistanceLessThan(attackRange, null, targetList))
+                if (CanSee(null, targetList) && IsDistanceLessThan(attackRange, focusTarget))
                 {
                     ChangeState(AIState.Attack); //Attack the target
                 }

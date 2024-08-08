@@ -59,6 +59,10 @@ public class GameManager : MonoBehaviour
         ActivateTitleScreen();  //Start on the Title Screen
     }
 
+
+
+    //====| FUNCTIONS |====
+    
     //Function for starting the Game
     private void StartGame()
     {
@@ -77,7 +81,6 @@ public class GameManager : MonoBehaviour
                 //for every players there are meant to be:
                 for (int id = 0; id < numberOfPlayers; id++)
                 {
-                    
                     SpawnPlayer(id); //Spawn the Player into the Scene
                 }
             }
@@ -105,6 +108,73 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
+    //instantiates the Players
+    private void SpawnPlayer(int id)
+    {
+        Debug.Log("---Spawning Player: " + id);
+        //Player set-up References
+        GameObject controller;
+        //Assign Player 1
+        if (id == 0)
+        {
+            controller = Instantiate(player1ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        }
+        //Assign Player 2
+        else { controller = Instantiate(player2ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; }
+
+        
+        //CONSTRUCT PLAYER:
+        playerCharacter = Instantiate(playerPrefab, mapGenerator.getRandPawnSpawn().transform) as GameObject; //Make a Player Prefab into the scene
+
+        controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
+        playerCharacter.GetComponent<Pawn>().controller = controller.GetComponent<Controller>(); // Attach the player controller to the spawned pawn
+
+        Debug.Log("---FINISHED: Spawning Player: " + id + "|| PAWN = " + playerList[id].pawn.name + "/ GAME OBJECT = " + playerList[id].pawn.gameObject);
+    }
+
+    // Set the Default AI Targets for all AI Controllers
+   /* private void SetDefaultAITargets()
+    {
+        Debug.Log("SETTING DEFAULT TARGETS");
+
+        foreach (GameObject player in DefaultAITargets)
+        {
+            Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
+        }
+
+        AIController debugAiController = null;
+
+            //For Every AI that exists in the Game
+        foreach (AIController ai in AIControllerList)
+        {
+            if (ai.targetList == null)
+            {
+                    ai.targetList = new List<GameObject>();
+            }
+            
+            ai.targetList.AddRange(DefaultAITargets);
+            debugAiController = ai;
+        }
+        
+        //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
+        foreach (GameObject newObject in debugAiController.targetList) 
+        {
+            Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
+        }
+    }
+   */
+
+    //Checks if the given score is higher than the current highscore
+    public void SetHighScore(int score)
+    {
+        //is the score being tested greater than the current highscore?
+        if (score > highScore)
+        {
+            highScore = score;            //set the new highscore
+            On_HighScore_Change.Invoke(); //Signal the highscore has changed
+        }
+    } 
+    
     //==== GAME STATES ==== 
     //Deactivates all Game States
     private void DeactivateAllGameStates()
@@ -149,76 +219,6 @@ public class GameManager : MonoBehaviour
         {
             DeactivateAllGameStates();       //reset all current game states
             GameOverObject?.SetActive(true);  //Activate Title Screen
-        }
-    }
-
-    //====| FUNCTIONS |====
-    //instantiates the Player in the transform of the playerspawner
-    private void SpawnPlayer(int id)
-    {
-        Debug.Log("---Spawning Player: " + id);
-        //Player set-up References
-        GameObject controller;
-        //Assign Player 1
-        if (id < 1)
-        {
-            controller = Instantiate(player1ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        }
-        //Assign Player 2
-        else { controller = Instantiate(player2ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; }
-
-        //Make a Player controller into the scene
-        playerCharacter = Instantiate(playerPrefab, mapGenerator.getRandPawnSpawn().transform) as GameObject; //Make a Player Pawn into the scene
-
-
-        controller.GetComponent<Controller>().pawn = playerCharacter.GetComponent<Pawn>(); // Attach the spawned player pawn to the spawned controller
-        playerCharacter.GetComponent<Pawn>().controller = controller.GetComponent<Controller>(); // Attach the player controller to the spawned pawn
-
-        // Add the playerCharacter to playerList if needed
-        playerList.Add(controller.GetComponent<PlayerController>());
-
-        Debug.Log("---FINISHED: Spawning Player: " + id + "|| PAWN = " + playerList[id].pawn.name + "/ GAME OBJECT = " + playerList[id].pawn.gameObject);
-    }
-
-    // Set the Default AI Targets for all AI Controllers
-    private void SetDefaultAITargets()
-    {
-        Debug.Log("SETTING DEFAULT TARGETS");
-
-        foreach (GameObject player in DefaultAITargets)
-        {
-            Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
-        }
-
-        AIController debugAiController = null;
-
-            //For Every AI that exists in the Game
-        foreach (AIController ai in AIControllerList)
-        {
-            if (ai.targetList == null)
-            {
-                    ai.targetList = new List<GameObject>();
-            }
-            
-            ai.targetList.AddRange(DefaultAITargets);
-            debugAiController = ai;
-        }
-        
-        //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
-        foreach (GameObject newObject in debugAiController.targetList) 
-        {
-            Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
-        }
-    }
-
-    //Checks if the given score is higher than the current highscore
-    public void SetHighScore(int score)
-    {
-        //is the score being tested greater than the current highscore?
-        if (score > highScore)
-        {
-            highScore = score;            //set the new highscore
-            On_HighScore_Change.Invoke(); //Signal the highscore has changed
         }
     }
 }

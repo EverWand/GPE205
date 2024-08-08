@@ -18,8 +18,13 @@ public class Projectile : MonoBehaviour
         if (other.gameObject != shooter) //is the collider ran into not the object that shot the projectile?
         {
             HealthSystem health = other.GetComponent<HealthSystem>(); //get a health component from the collided object
-            Pawn source = shooter?.GetComponent<Pawn>();
-
+            Pawn source = null;
+            try
+            {
+                source = shooter?.GetComponent<Pawn>();
+            }
+            catch { };
+            
             //is the health component there?
             if (health != null)
             {

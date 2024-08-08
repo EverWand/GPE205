@@ -50,12 +50,12 @@ public class PlayerController : Controller
         //============| MOVEMENT |============
         if (Input.GetKey(MoveForward))
         {
-            pawn.MoveForward(pawn.movementSpeed);
+            pawn.MoveForward(pawn.BaseMovementSpeed);
             noiseMaker.MakeNoise(noiseMaker.movementVolume);
         }
         if (Input.GetKey(MoveBackward))
         {
-            pawn.MoveBackwards(pawn.movementSpeed);
+            pawn.MoveBackwards(pawn.BaseMovementSpeed);
             noiseMaker.MakeNoise(noiseMaker.movementVolume);
 
         }
@@ -81,7 +81,6 @@ public class PlayerController : Controller
     }
     public override void addToManager()
     {
-        //add player to the Game Managanger
         GameManager.instance.playerList.Add(this);
     }
 
