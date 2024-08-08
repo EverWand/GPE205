@@ -203,17 +203,22 @@ PrefabInstance:
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
       propertyPath: rows
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
       propertyPath: columns
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}
       propertyPath: seedMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
+        type: 3}
+      propertyPath: enemyDensity
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3261426816276002235, guid: b0d27ff6666ef1249a35b5737c228659,
         type: 3}

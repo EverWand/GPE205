@@ -14,6 +14,9 @@ public class WaypointScript : MonoBehaviour
     }
     private void OnDestroy()
     {
-        GameManager.instance.mapGenerator.wayPoints.Remove(this);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.mapGenerator.wayPoints.Remove(this);
+        }
     }
 }

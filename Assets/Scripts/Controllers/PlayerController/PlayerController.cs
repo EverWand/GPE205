@@ -14,22 +14,12 @@ public class PlayerController : Controller
     public NoiseMaker noiseMaker; //Makes for AI to sense Noises
 
     //===|SCHEDULES|===
-
-    private void Awake()
-    {
-        Debug.Log("PLAYER CONTROLLER AWAKE!!!");
-
-        addToManager();
-    }
     private void Start()
     {
         Debug.Log("PLAYER CONTROLLER STARTING!!!");
 
         //set reference of pawn's noisemaker component
         noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
-        //====| Event Subscriptions |====
-        On_NoLives += CheckGameOver;    //Subscribe to the No Lives event
-
     }
     // Update is called once per frame
     void Update()
@@ -39,8 +29,20 @@ public class PlayerController : Controller
     //When the controller gets destroyed
     private void OnDestroy()
     {
-        //add player to the Game Managanger
-        GameManager.instance.playerList.Remove(this);
+        
+        GameManager manager = GameManager.instance;
+
+        manager.SetHighScore(score);
+
+        //Remove player to the Game Managanger
+        manager.playerList.Remove(this);
+
+        //Remove self from the Target Lsit for AIs
+        foreach (AIController ai in manager.AIControllerList)
+        {
+            ai.targetList.Remove(this.gameObject);
+            ai.CleanupTargetList();
+        }
         CheckGameOver();    //check if this causes a gameover
     }
 
@@ -92,7 +94,7 @@ public class PlayerController : Controller
     }
 
     //Tries to activate the Gameover state
-    public void CheckGameOver()
+    private void CheckGameOver()
     {
         GameManager.instance.ActivateGameOverScreen();
     }

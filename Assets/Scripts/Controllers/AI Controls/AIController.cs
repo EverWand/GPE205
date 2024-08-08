@@ -94,9 +94,16 @@ public class AIController : Controller
         GameManager.instance.AIControllerList.Add(this);    // Add this controller to the Game Manager AI Controller List
     }
 
+    //Used to Clean out the target list if there are any null values
+    public void CleanupTargetList()
+    {
+        // Remove any null references from the targetList
+        targetList.RemoveAll(target => target == null);
+    }
     //Overridding function to process the different inputs of the contoller (AKA: The FSM)
     public override void ProcessInputs()
     {
+        CleanupTargetList();    // make sure the target list is clean of any null items
 
         //Is there a targets to interact with?
         if (CollectTargets(null, targetList).Count <= 0 || targetList == null || !pawn)
@@ -211,6 +218,87 @@ public class AIController : Controller
         }
     }
 
+    //---Check Senses
+    //Return wether the AI can Hear the targets || USED TO FIND FOCUSED TARGET
+    public bool CanHear(GameObject target = null, List<GameObject> targets = null)
+    {
+        if (focusTarget != null || targets == null || targets.Count <= 0) { return false; }
+
+
+        //Iterate through each Target object within the target list
+        foreach (GameObject targetObject in CollectTargets(target, targets))
+        {
+            //Get Target's Noisemaker
+            NoiseMaker noiseMaker = targetObject.GetComponent<NoiseMaker>();
+
+            //===| HEARING PREREQUISITES |===
+            //Make sure the targets makes noise and it's in range
+            if (noiseMaker == null || noiseMaker.noiseDistance <= 0 || focusTarget) { return false; }
+
+
+            //===| HEARING TEST |===
+            //Farthest distance the AI would be able to hear the targetted noise
+            float totalDistance = noiseMaker.noiseDistance + hearingDistance;
+
+            //Checks if the AI distance from the targets is within the total hearing distance calculated
+            if (Vector3.Distance(pawn.transform.position, targetObject.transform.position) <= totalDistance)
+            {
+                focusTarget = targetObject; //Focus on that target it hears
+                Debug.Log(pawn.gameObject.name + " hears a new target and will begin it's search");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Return wether the AI can see the Target
+    public bool CanSee(GameObject target, List<GameObject> targets)
+    {
+        if (targets == null || targets.Count <= 0) { return false; }
+        //Collect the specified targets
+        List<GameObject> targetList = CollectTargets(target, targets);
+        foreach (GameObject targetObject in targetList)
+        {
+            //Get vector pointing to the targets
+            Vector3 agentToTargetVector = targetObject.transform.position - pawn.transform.position;
+
+            //Get the angle to the targeted vector from where the AI is looking forward
+            float angleToTarget = Vector3.Angle(agentToTargetVector, pawn.transform.forward);
+
+            //Is Target within FOV
+            if (angleToTarget < fieldOfView)
+            {
+                //Do we get the targets within our veiw Raycasting?
+                if (ShootRaycast(agentToTargetVector, viewDistance) == targetObject)
+                {
+                    //See a new target
+                    focusTarget = targetObject;
+                    Debug.Log(pawn.gameObject.name + " Sees a new target and will begin it's search");
+                    return true;
+                }
+
+                return false; //Dont See the Target
+            }
+        }
+        return false; // Target is not within FOV
+    }
+
+    public List<GameObject> CollectTargets(GameObject target = null, List<GameObject> targets = null)
+    {
+        List<GameObject> targetList = new();
+
+        if (target != null)
+        {
+            targetList.Add(target);
+        }
+        if (targets != null)
+        {
+            targetList.AddRange(targets);
+        }
+        return targetList;
+    }
+
+
     public GameObject FindClosestPlayer()
     {
         GameObject closestPlayer = null;
@@ -300,9 +388,12 @@ public class AIController : Controller
 
     //---ACTION FUNCTIONS---
     //---Seeking out targets
-    public void Seek(GameObject target = null) //Seek GameObject
+    public void Seek(GameObject target) //Seek GameObject
     {
-        Seek(target.transform.position);
+        if (target != null)
+        {
+            Seek(target.transform.position);
+        }
     }
     public void Seek(Vector3 targetPosition) //Seek Position
     {
@@ -448,85 +539,6 @@ public class AIController : Controller
         }
 
         return false; //Time is still going
-    }
-    //---Check Senses
-    //Return wether the AI can Hear the targets || USED TO FIND FOCUSED TARGET
-    public bool CanHear(GameObject target = null, List<GameObject> targets = null)
-    {
-        if (focusTarget != null || targets == null || targets.Count <= 0) { return false; }
-
-
-        //Iterate through each Target object within the target list
-        foreach (GameObject targetObject in CollectTargets(target, targets))
-        {
-            //Get Target's Noisemaker
-            NoiseMaker noiseMaker = targetObject.GetComponent<NoiseMaker>();
-
-            //===| HEARING PREREQUISITES |===
-            //Make sure the targets makes noise and it's in range
-            if (noiseMaker == null || noiseMaker.noiseDistance <= 0 || focusTarget) { return false; }
-
-
-            //===| HEARING TEST |===
-            //Farthest distance the AI would be able to hear the targetted noise
-            float totalDistance = noiseMaker.noiseDistance + hearingDistance;
-
-            //Checks if the AI distance from the targets is within the total hearing distance calculated
-            if (Vector3.Distance(pawn.transform.position, targetObject.transform.position) <= totalDistance)
-            {
-                focusTarget = targetObject; //Focus on that target it hears
-                Debug.Log(pawn.gameObject.name + " hears a new target and will begin it's search");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //Return wether the AI can see the Target
-    public bool CanSee(GameObject target, List<GameObject> targets)
-    {
-        if (targets == null || targets.Count <= 0) { return false; }
-        //Collect the specified targets
-        List<GameObject> targetList = CollectTargets(target, targets);
-        foreach (GameObject targetObject in targetList)
-        {
-            //Get vector pointing to the targets
-            Vector3 agentToTargetVector = targetObject.transform.position - pawn.transform.position;
-
-            //Get the angle to the targeted vector from where the AI is looking forward
-            float angleToTarget = Vector3.Angle(agentToTargetVector, pawn.transform.forward);
-
-            //Is Target within FOV
-            if (angleToTarget < fieldOfView)
-            {
-                //Do we get the targets within our veiw Raycasting?
-                if (ShootRaycast(agentToTargetVector, viewDistance) == targetObject)
-                {
-                    //See a new target
-                    focusTarget = targetObject;
-                    Debug.Log(pawn.gameObject.name + " Sees a new target and will begin it's search");
-                    return true;
-                }
-
-                return false; //Dont See the Target
-            }
-        }
-        return false; // Target is not within FOV
-    }
-
-    public List<GameObject> CollectTargets(GameObject target = null, List<GameObject> targets = null)
-    {
-        List<GameObject> targetList = new();
-
-        if (target != null)
-        {
-            targetList.Add(target);
-        }
-        if (targets != null)
-        {
-            targetList.AddRange(targets);
-        }
-        return targetList;
     }
 
 

@@ -31,6 +31,7 @@ public abstract class Controller : MonoBehaviour
         }
 
         On_NoLives += Handle_NoLives;   //Subscribe to No Lives event
+        addToManager();
     }
 
     // Update is called once per frame
@@ -88,6 +89,7 @@ public abstract class Controller : MonoBehaviour
         //is lives below or is 0
         if (lives <= 0)
         {
+            Debug.Log("No Lives for " + pawn.gameObject.name);
             lives = 0;              //Make sure lives is 0
             On_NoLives?.Invoke();   //Signal if there's no lives left
         }
@@ -98,7 +100,7 @@ public abstract class Controller : MonoBehaviour
 
     private void Handle_NoLives()
     {
-        //Debug.Log("Handling No Lives for " + pawn.gameObject.name);
+        Debug.Log("Handling No Lives for " + pawn.gameObject.name);
 
         //Destroy both the Pawn and the controller
         Destroy(pawn.gameObject);

@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bf4a4329171818428b436f5db86be8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HsDisplay: {fileID: 3354297102444262533}
+  HsDisplay: {fileID: 9042892451905216672}
 --- !u!1 &2701242205576857296
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,10 +693,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Pawn: {fileID: 0}
   scoreDisplayObj: {fileID: 4203123573430991431}
-  highScoreDisplayObj: {fileID: 0}
   livesDisplayObj: {fileID: 7961954253403843742}
   scoreDisplay: {fileID: 0}
-  highScoreDisplay: {fileID: 0}
   livesDisplay: {fileID: 0}
 --- !u!1 &4203123573430991431
 GameObject:

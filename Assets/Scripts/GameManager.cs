@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public MapGenerator mapGenerator;
 
-    [HideInInspector] public int highScore = 100; //Saves the Game's Highscore
+    [HideInInspector] public int highScore = 0; //Saves the Game's Highscore
     public event Action On_HighScore_Change;
 
     //Player References
@@ -59,10 +59,12 @@ public class GameManager : MonoBehaviour
         ActivateTitleScreen();  //Start on the Title Screen
     }
 
-
-
+    private void Update()
+    {
+        SetHighScore(100);
+    }
     //====| FUNCTIONS |====
-    
+
     //Function for starting the Game
     private void StartGame()
     {
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
         //Assign Player 2
         else { controller = Instantiate(player2ControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject; }
 
-        
+
         //CONSTRUCT PLAYER:
         playerCharacter = Instantiate(playerPrefab, mapGenerator.getRandPawnSpawn().transform) as GameObject; //Make a Player Prefab into the scene
 
@@ -133,36 +135,36 @@ public class GameManager : MonoBehaviour
     }
 
     // Set the Default AI Targets for all AI Controllers
-   /* private void SetDefaultAITargets()
-    {
-        Debug.Log("SETTING DEFAULT TARGETS");
+    /* private void SetDefaultAITargets()
+     {
+         Debug.Log("SETTING DEFAULT TARGETS");
 
-        foreach (GameObject player in DefaultAITargets)
-        {
-            Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
-        }
+         foreach (GameObject player in DefaultAITargets)
+         {
+             Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
+         }
 
-        AIController debugAiController = null;
+         AIController debugAiController = null;
 
-            //For Every AI that exists in the Game
-        foreach (AIController ai in AIControllerList)
-        {
-            if (ai.targetList == null)
-            {
-                    ai.targetList = new List<GameObject>();
-            }
-            
-            ai.targetList.AddRange(DefaultAITargets);
-            debugAiController = ai;
-        }
-        
-        //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
-        foreach (GameObject newObject in debugAiController.targetList) 
-        {
-            Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
-        }
-    }
-   */
+             //For Every AI that exists in the Game
+         foreach (AIController ai in AIControllerList)
+         {
+             if (ai.targetList == null)
+             {
+                     ai.targetList = new List<GameObject>();
+             }
+
+             ai.targetList.AddRange(DefaultAITargets);
+             debugAiController = ai;
+         }
+
+         //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
+         foreach (GameObject newObject in debugAiController.targetList) 
+         {
+             Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
+         }
+     }
+    */
 
     //Checks if the given score is higher than the current highscore
     public void SetHighScore(int score)
@@ -173,8 +175,8 @@ public class GameManager : MonoBehaviour
             highScore = score;            //set the new highscore
             On_HighScore_Change.Invoke(); //Signal the highscore has changed
         }
-    } 
-    
+    }
+
     //==== GAME STATES ==== 
     //Deactivates all Game States
     private void DeactivateAllGameStates()

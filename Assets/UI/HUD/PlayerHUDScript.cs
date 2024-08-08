@@ -15,7 +15,6 @@ public class PlayerHUDScript : MonoBehaviour
     [HideInInspector] public TextMeshProUGUI scoreDisplay;
     [HideInInspector] public TextMeshProUGUI livesDisplay;
 
-
     private void Start()
     {
         //Set Controller
@@ -32,7 +31,7 @@ public class PlayerHUDScript : MonoBehaviour
             controller.On_Score_Change += UpdateScoreDisplay;   //Link Score Display
             controller.On_Lives_Change += UpdateLivesDisplay;   //Link Lives Display
         }
-
+        
         FullHUDUpdate();
     }
 
@@ -42,6 +41,10 @@ public class PlayerHUDScript : MonoBehaviour
         UpdateScoreDisplay();
     }
 
+    public void Update()
+    {
+        
+    }
     //LIVES DISPLAY
     public void UpdateLivesDisplay()
     {
