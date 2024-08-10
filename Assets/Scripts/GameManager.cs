@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 
 public class GameManager : MonoBehaviour
@@ -67,10 +66,6 @@ public class GameManager : MonoBehaviour
         ActivateTitleScreen();  //Start on the Title Screen
     }
 
-    private void Update()
-    {
-        SetHighScore(100);
-    }
     //====| FUNCTIONS |====
 
     //Function for starting the Game
@@ -144,39 +139,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("---FINISHED: Spawning Player: " + id + "|| PAWN = " + playerList[id].pawn.name + "/ GAME OBJECT = " + playerList[id].pawn.gameObject);
     }
 
-    // Set the Default AI Targets for all AI Controllers
-    /* private void SetDefaultAITargets()
-     {
-         Debug.Log("SETTING DEFAULT TARGETS");
-
-         foreach (GameObject player in DefaultAITargets)
-         {
-             Debug.Log("PLAYER " + (DefaultAITargets.IndexOf(player) + 1) + ": " + player.name);
-         }
-
-         AIController debugAiController = null;
-
-             //For Every AI that exists in the Game
-         foreach (AIController ai in AIControllerList)
-         {
-             if (ai.targetList == null)
-             {
-                     ai.targetList = new List<GameObject>();
-             }
-
-             ai.targetList.AddRange(DefaultAITargets);
-             debugAiController = ai;
-         }
-
-         //DEBUG : CHECKING WHAT GAME OBJECTS ARE NOW INSIDE OF TARGETLIST OF AI
-         foreach (GameObject newObject in debugAiController.targetList) 
-         {
-             Debug.Log("NEW TARGET FOR " + debugAiController.gameObject.name + ": " + newObject.name);
-         }
-     }
-    */
-
-    //Checks if the given score is higher than the current highscore
     public void SetHighScore(int score)
     {
         //is the score being tested greater than the current highscore?
@@ -186,7 +148,12 @@ public class GameManager : MonoBehaviour
             On_HighScore_Change.Invoke(); //Signal the highscore has changed
         }
     }
+    public void PlaySFX(AudioSource SFX)
+    {
+        SFX.volume = volumeSFX;
+        SFX.Play();
 
+    }
     //==== GAME STATES ==== 
     //Deactivates all Game States
     private void DeactivateAllGameStates()
@@ -221,6 +188,7 @@ public class GameManager : MonoBehaviour
     public void ActivateGameplay()
     {
         DeactivateAllGameStates();  //reset all current game states
+        GameplayObject.SetActive(true);
         StartGame();                //Start the Game        
     }
     //---GAME OVER

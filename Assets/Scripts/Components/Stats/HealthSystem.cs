@@ -1,9 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Audio;
+
 
 public class HealthSystem : MonoBehaviour
 {
+    //AUDIO
+    public AudioSource dieSFX;
+
     //HEALTH VARIABLES
     public float maxHealth = 100; //Sets the Max Health of the owner
     public float currHealth;      //tracks the current Objects Health
@@ -74,6 +79,9 @@ public class HealthSystem : MonoBehaviour
     //When the Object Dies
     public void Die(Pawn source = null)
     {
+        GameManager.instance.PlaySFX(dieSFX);
+
+
         OnDeath?.Invoke(); //Signal Death
 
         Pawn pawn = GetComponent<Pawn>(); //This GameObject's Pawn

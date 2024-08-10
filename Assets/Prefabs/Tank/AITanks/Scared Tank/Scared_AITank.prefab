@@ -71,13 +71,14 @@ MonoBehaviour:
   attackRange: 10
   minSteerDistance: 0
   maxSteerDistance: 5
-  target: {fileID: 0}
+  targetList: []
+  focusTarget: {fileID: 0}
   wayPoints: []
   currWaypointID: 0
+  currWayPointScript: {fileID: 0}
+  currWayPoint: {fileID: 0}
   wayPointPrefab: {fileID: 1785804161569491535, guid: c57171191d1c9754287f594fc3b19c87,
     type: 3}
-  currWayPoint: {fileID: 0}
-  currWayPointScript: {fileID: 0}
   followDistance: 0
 --- !u!1001 &446677897777241894
 PrefabInstance:
@@ -91,6 +92,11 @@ PrefabInstance:
         type: 3}
       propertyPath: scoreReward
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2811184727621318690, guid: 2f8982d7fc8789b49971659c7f72409e,
+        type: 3}
+      propertyPath: BaseMovementSpeed
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5636886781287820760, guid: 2f8982d7fc8789b49971659c7f72409e,
         type: 3}

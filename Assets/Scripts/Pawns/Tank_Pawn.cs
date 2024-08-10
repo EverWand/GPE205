@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class Tank_Pawn : Pawn
 {
+    public AudioSource DieSFX;
+
     Shooter shooter;
     private NoiseMaker noiseMaker;
 

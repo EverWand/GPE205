@@ -25,8 +25,8 @@ public abstract class Shooter : MonoBehaviour
     {
         if (!canShoot()) return; //Return if the Shooter is still on cooldown
 
-        shootSFX.volume = GameManager.instance.volumeSFX;
-        shootSFX.Play();    //SHOOT SFX
+        //Play Shoot SFX
+        GameManager.instance.PlaySFX(shootSFX);
 
         fireCoolDown = Time.time + 1f / fireRate; //begin cooldown
 

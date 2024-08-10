@@ -373,7 +373,9 @@ public class AIController : Controller
     public void DoAttackState()
     {
         Seek(focusTarget);
-        pawn.Primary();
+        if (CanSee(null, targetList)){
+            pawn.Primary(); 
+        }
     }
     //---Scanning Action
     public void DoScan()

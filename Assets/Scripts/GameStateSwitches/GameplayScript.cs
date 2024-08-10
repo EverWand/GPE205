@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class GameplayScript : MonoBehaviour
 {
@@ -13,7 +10,7 @@ public class GameplayScript : MonoBehaviour
         GameManager.instance.On_Game_Start += PlayBGM;  //Subscribe BGM to when starting the game
     }
 
-    private void PlayBGM() 
+    private void PlayBGM()
     {
         //set the volume
         BGM.volume = GameManager.instance.volumeBGM;

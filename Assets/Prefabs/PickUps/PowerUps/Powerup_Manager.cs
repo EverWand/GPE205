@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Powerup_Manager : MonoBehaviour
 {
+    public AudioSource pickupSFX;
     public List<Powerup> powerupList;
     public List<Powerup> removedPowerupList;
-
 
     private void Start()
     {
@@ -27,6 +27,9 @@ public class Powerup_Manager : MonoBehaviour
     //Add a new Powerup
     public void Add(Powerup powerup)
     {
+        //Pick up has been picked up, Play Pickup Sound!
+        GameManager.instance.PlaySFX(pickupSFX);
+
         //POWERUP ADD TO MANAGER
         powerup.ApplyEffect(this);
         powerupList.Add(powerup);
