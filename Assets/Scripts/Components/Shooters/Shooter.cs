@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public abstract class Shooter : MonoBehaviour
 {
@@ -10,8 +11,10 @@ public abstract class Shooter : MonoBehaviour
     public float fireRate = 1f;         //The rate the cooldown fills up
     private float fireCoolDown = 0f;    //cool down timer
 
+    //References
     public GameObject projectilePrefab; //the projectile that the Shooter Shoots
     public Transform firePoint;         //The transform where to fire the projectile from
+    public AudioSource shootSFX;        //SFX for when something is Shot
 
     public bool canShoot()
     {
@@ -21,6 +24,9 @@ public abstract class Shooter : MonoBehaviour
     public void Shoot()
     {
         if (!canShoot()) return; //Return if the Shooter is still on cooldown
+
+        shootSFX.volume = GameManager.instance.volumeSFX;
+        shootSFX.Play();    //SHOOT SFX
 
         fireCoolDown = Time.time + 1f / fireRate; //begin cooldown
 

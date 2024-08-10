@@ -432,6 +432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 702424557}
+  - component: {fileID: 702424558}
   m_Layer: 0
   m_Name: GamePlay
   m_TagString: Untagged
@@ -454,6 +455,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1707607123}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &702424558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702424556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c05b8b1b3270fa4eb34c3078e694c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BGM: {fileID: 0}
 --- !u!1 &727903009
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9c87281e883224aa92148655fb9ce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  volumeBGM: 1
+  volumeSFX: 1
   mapGenerator: {fileID: 1738846984}
   highScore: 0
   PLAYER_MAX: 2

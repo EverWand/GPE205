@@ -22,7 +22,6 @@ public class HighScoreDisplay : MonoBehaviour
     {
         //get the current Highscore
         int hs = gameManager.highScore;
-        Debug.Log(hs);
         //set the text to the highscore
         HsDisplay.text = hs.ToString();
     }

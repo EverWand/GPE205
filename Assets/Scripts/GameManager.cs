@@ -1,32 +1,40 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class GameManager : MonoBehaviour
 {
     //====| VARIABLES |====
     public static GameManager instance;
+    //---SOUND SETTINGS
+    public float volumeBGM = 1.0f;
+    public float volumeSFX = 1.0f;
+
     public MapGenerator mapGenerator;
 
     [HideInInspector] public int highScore = 0; //Saves the Game's Highscore
     public event Action On_HighScore_Change;
 
-    //Player References
+    //---PLAYER
+    //Player Settings
     public int PLAYER_MAX;  //The Maximum amount of players
     [HideInInspector] public int numberOfPlayers = 1; //Decides how many players should be spawned {hidden from editor view}
-
+    //Player References
     public GameObject player1ControllerPrefab;
     public GameObject player2ControllerPrefab;
     public GameObject playerPrefab;
     public Transform playertransform;
     private GameObject playerCharacter;
 
-    //Game States
+    //---GAME STATES
     public GameObject TitleScreenObject;
     public GameObject OptionsObject;
     public GameObject CreditsObject;
+    //Gameplay state
     public GameObject GameplayObject;
+    public event Action On_Game_Start;
     public GameObject GameOverObject;
 
     //====| GameObject Lists |====
@@ -93,7 +101,9 @@ public class GameManager : MonoBehaviour
                 //Debug.Log(player.pawn.gameObject);
             }
 
-            On_HighScore_Change?.Invoke();   // invoke Highscore to initially update the display
+
+            //INVOKE EVENTS
+            On_Game_Start?.Invoke();
         }
     }
     //Quits the Game
