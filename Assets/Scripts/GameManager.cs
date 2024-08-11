@@ -158,12 +158,15 @@ public class GameManager : MonoBehaviour
     //Deactivates all Game States
     private void DeactivateAllGameStates()
     {
-        TitleScreenObject?.SetActive(false);
+        if (instance != null)
+        {
+            TitleScreenObject?.SetActive(false);
 
-        OptionsObject?.SetActive(false);
-        CreditsObject?.SetActive(false);
-        GameplayObject?.SetActive(false);
-        GameOverObject?.SetActive(false);
+            OptionsObject?.SetActive(false);
+            CreditsObject?.SetActive(false);
+            GameplayObject?.SetActive(false);
+            GameOverObject?.SetActive(false);
+        }
     }
 
     //---TITLE
